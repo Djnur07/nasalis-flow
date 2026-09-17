@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { WalletButton } from "./WalletButton";
 import { XIcon } from "./XIcon";
-import { X_URL } from "@/lib/social";
+import { BRAND, SOCIAL } from "@/lib/master-data";
 
 const NAV_LINKS = [
   { label: "Collection", href: "#collection" },
@@ -61,7 +61,7 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
         <a href="#home" className="font-serif text-lg tracking-wide text-ink">
-          Nasalis Flow
+          {BRAND.name}
         </a>
 
         <nav aria-label="Primary" className="hidden items-center gap-10 md:flex">
@@ -75,10 +75,10 @@ export function Navbar() {
             </a>
           ))}
           <a
-            href={X_URL}
+            href={SOCIAL.x}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Nasalis Flow on X"
+            aria-label={`${BRAND.name} on X`}
             className="text-ink/70 transition-colors hover:text-ink"
           >
             <XIcon className="h-4 w-4" />
@@ -117,10 +117,10 @@ export function Navbar() {
             </a>
           ))}
           <a
-            href={X_URL}
+            href={SOCIAL.x}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Nasalis Flow on X"
+            aria-label={`${BRAND.name} on X`}
             className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink/80"
           >
             <XIcon className="h-4 w-4" />

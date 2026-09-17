@@ -1,12 +1,11 @@
 import { ArtworkCard } from "./ArtworkCard";
 import { Button } from "./Button";
 import { getCollectionImages } from "@/lib/artwork";
+import { COLLECTION } from "@/lib/master-data";
 
-const TOTAL_SUPPLY = 5555;
-
-// A curated homepage preview, not the collection's supply — capped regardless
-// of how many real files eventually land in /public/images.
-const PREVIEW_COUNT = 8;
+// PREVIEW_COUNT is a curated homepage preview, not the collection's supply —
+// capped regardless of how many real files eventually land in /public/images.
+const { totalSupply: TOTAL_SUPPLY, previewCount: PREVIEW_COUNT } = COLLECTION;
 
 export function Collection() {
   const images = getCollectionImages().slice(0, PREVIEW_COUNT);

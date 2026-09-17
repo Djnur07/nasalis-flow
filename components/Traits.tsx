@@ -1,44 +1,30 @@
+import { TRAITS as MASTER_TRAITS } from "@/lib/master-data";
+
+type TraitKey = keyof typeof MASTER_TRAITS;
+
 type Trait = {
   name: string;
   description: string;
   variants: string[];
 };
 
-// Structured for a future swap to real NFT metadata — each category maps
-// directly to a trait_type/value pair once the collection's metadata lands.
-const TRAITS: Trait[] = [
-  {
-    name: "Palette",
-    description: "Line color palette.",
-    variants: ["Copper Etching", "Neon Rainforest", "Sepia Ink", "Midnight Blue Mist"],
-  },
-  {
-    name: "Flow Style",
-    description: "Style of the flowing line system.",
-    variants: ["Tight Contour", "Wavy", "Turbulent"],
-  },
-  {
-    name: "Density",
-    description: "Line density.",
-    variants: ["Sparse", "Medium", "Dense"],
-  },
-  {
-    name: "Nose Class",
-    description:
-      "Nose classification — the collection's primary rarity trait, based on the biological characteristic that a larger nose is associated with dominance in male proboscis monkeys.",
-    variants: ["Small", "Medium", "Large", "Giant"],
-  },
-  {
-    name: "Background",
-    description: "Background style.",
-    variants: ["Dark Void", "Starry", "Soft Mist"],
-  },
-  {
-    name: "Guide Line",
-    description: "Thin silhouette guide line beneath the flowing-line layer.",
-    variants: ["Present", "Absent"],
-  },
-];
+// Descriptions live here because lib/master-data.ts only defines the
+// official category names and values, not display copy.
+const TRAIT_DESCRIPTIONS: Record<TraitKey, string> = {
+  palette: "Line color palette.",
+  flowStyle: "Style of the flowing line system.",
+  density: "Line density.",
+  noseClass:
+    "Nose classification — the collection's primary rarity trait, based on the biological characteristic that a larger nose is associated with dominance in male proboscis monkeys.",
+  background: "Background style.",
+  guideLine: "Thin silhouette guide line beneath the flowing-line layer.",
+};
+
+const TRAITS: Trait[] = (Object.keys(MASTER_TRAITS) as TraitKey[]).map((key) => ({
+  name: MASTER_TRAITS[key].name,
+  description: TRAIT_DESCRIPTIONS[key],
+  variants: MASTER_TRAITS[key].values,
+}));
 
 const PULL_QUOTE =
   "The proboscis monkey's nose becomes the collection's core rarity trait: the larger it is, the rarer the piece.";

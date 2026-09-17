@@ -4,7 +4,7 @@ import { GenerativePortrait } from "./GenerativePortrait";
 import { WalletButton } from "./WalletButton";
 import { XIcon } from "./XIcon";
 import { getHeroImage } from "@/lib/artwork";
-import { X_URL } from "@/lib/social";
+import { BRAND, COLLECTION, SOCIAL } from "@/lib/master-data";
 
 const QUOTE =
   "An exploration of form, flow, and identity through generative portraits of the proboscis monkey (Nasalis larvatus).";
@@ -36,10 +36,10 @@ export function Hero() {
 
       <div className="relative mx-auto w-full max-w-6xl px-6 pt-28 pb-24 sm:px-10">
         <p className="animate-fade-up text-xs uppercase tracking-[0.35em] text-gold">
-          5,555 Generative Portraits
+          {COLLECTION.totalSupply.toLocaleString()} Generative Portraits
         </p>
         <h1 className="animate-fade-up mt-6 max-w-3xl font-serif text-6xl leading-[1.05] sm:text-7xl lg:text-8xl">
-          Nasalis Flow
+          {BRAND.name}
         </h1>
         <p className="animate-fade-up mt-8 max-w-md text-lg italic leading-relaxed text-cream/75">
           {`"${QUOTE}"`}
@@ -49,7 +49,7 @@ export function Hero() {
           <Button href="#collection" tone="dark" variant="outline">
             Explore Collection
           </Button>
-          <Button href={X_URL} target="_blank" rel="noopener noreferrer" tone="dark" variant="outline">
+          <Button href={SOCIAL.x} target="_blank" rel="noopener noreferrer" tone="dark" variant="outline">
             <XIcon className="h-3.5 w-3.5" />
             Follow on X
           </Button>

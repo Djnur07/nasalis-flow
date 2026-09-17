@@ -53,7 +53,7 @@ export const BRAND: Brand = {
 export const COLLECTION: Collection = {
   name: "Nasalis Flow",
   totalSupply: 5555,
-  previewCount: 8,
+  previewCount: 50,
 };
 
 export const WEBSITE: Website = {

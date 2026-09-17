@@ -11,6 +11,11 @@ export function getHeroImage(): string | undefined {
   return found ? `/${found}` : undefined;
 }
 
+/** Natural sort so "Nasalis-2.png" comes before "Nasalis-10.png" instead of after. */
+function compareNatural(a: string, b: string): number {
+  return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+}
+
 /** Reads real artwork from /public/images so the gallery upgrades itself once files land there. */
 export function getCollectionImages(): string[] {
   const dir = path.join(process.cwd(), "public", "images");
@@ -18,7 +23,7 @@ export function getCollectionImages(): string[] {
     return fs
       .readdirSync(dir)
       .filter((file) => IMAGE_EXTENSIONS.test(file))
-      .sort()
+      .sort(compareNatural)
       .map((file) => `/images/${file}`);
   } catch {
     return [];

@@ -7,8 +7,14 @@ import { COLLECTION } from "@/lib/master-data";
 // capped regardless of how many real files eventually land in /public/images.
 const { totalSupply: TOTAL_SUPPLY, previewCount: PREVIEW_COUNT } = COLLECTION;
 
+// Scopes the preview to the Nasalis Flow artwork series, ignoring any other
+// unrelated files that may also live under /public/images.
+const NASALIS_IMAGE_PATTERN = /\/Nasalis-\d+\.png$/i;
+
 export function Collection() {
-  const images = getCollectionImages().slice(0, PREVIEW_COUNT);
+  const images = getCollectionImages()
+    .filter((src) => NASALIS_IMAGE_PATTERN.test(src))
+    .slice(0, PREVIEW_COUNT);
   const items =
     images.length > 0
       ? images.map((src, index) => ({ id: index + 1, src }))

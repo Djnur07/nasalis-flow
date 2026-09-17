@@ -49,6 +49,9 @@ export function Hero() {
           <Button href="#collection" tone="dark" variant="outline">
             Explore Collection
           </Button>
+          <Button href="/live" tone="dark" variant="outline">
+            Live Render
+          </Button>
           <Button href={SOCIAL.x} target="_blank" rel="noopener noreferrer" tone="dark" variant="outline">
             <XIcon className="h-3.5 w-3.5" />
             Follow on X

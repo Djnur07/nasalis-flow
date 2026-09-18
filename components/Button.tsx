@@ -17,16 +17,16 @@ type ButtonProps = CommonProps &
   ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-xs font-medium tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold";
+  "inline-flex items-center justify-center gap-2 px-7 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-colors duration-300 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-turquoise";
 
 const styles: Record<Tone, Record<Variant, string>> = {
   light: {
-    primary: "bg-ink text-cream hover:bg-gold hover:text-ink",
-    outline: "border border-ink/25 text-ink hover:border-ink",
+    primary: "bg-bone text-noir hover:bg-amber",
+    outline: "border border-bone/25 text-bone hover:border-bone",
   },
   dark: {
-    primary: "bg-cream text-ink hover:bg-gold hover:text-ink",
-    outline: "border border-cream/30 text-cream hover:border-cream",
+    primary: "bg-bone text-noir hover:bg-amber",
+    outline: "border border-bone/30 text-bone hover:border-bone",
   },
 };
 

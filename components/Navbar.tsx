@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { WalletButton } from "./WalletButton";
 import { XIcon } from "./XIcon";
 import { BRAND, SOCIAL } from "@/lib/master-data";
 
 const NAV_LINKS = [
-  { label: "Collection", href: "#collection" },
-  { label: "About", href: "#about" },
-  { label: "Traits", href: "#traits" },
+  { label: "Home", href: "/" },
+  { label: "Collection", href: "/collection" },
+  { label: "About", href: "/about" },
+  { label: "Traits", href: "/traits" },
+  { label: "Live", href: "/live" },
 ];
 
 function MenuIcon({ open }: { open: boolean }) {
@@ -34,6 +38,7 @@ function MenuIcon({ open }: { open: boolean }) {
 }
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -56,30 +61,37 @@ export function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open ? "border-b border-ink/10 bg-cream/90 backdrop-blur-sm" : "bg-transparent"
+        scrolled || open ? "border-b border-bone/10 bg-noir/85 backdrop-blur-sm" : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
-        <a href="#home" className="font-serif text-lg tracking-wide text-ink">
+        <Link href="/" className="font-serif text-lg tracking-wide text-bone">
           {BRAND.name}
-        </a>
+        </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-10 md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-xs font-medium uppercase tracking-[0.2em] text-ink/70 transition-colors hover:text-ink"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative pb-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
+                  active ? "text-bone" : "text-bone/80 hover:text-bone"
+                }`}
+              >
+                {link.label}
+                {active && <span className="absolute inset-x-0 -bottom-0.5 h-px bg-magenta" aria-hidden="true" />}
+              </Link>
+            );
+          })}
           <a
             href={SOCIAL.x}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${BRAND.name} on X`}
-            className="text-ink/70 transition-colors hover:text-ink"
+            className="text-bone/80 transition-colors hover:text-bone"
           >
             <XIcon className="h-4 w-4" />
           </a>
@@ -88,7 +100,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center text-ink md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center text-bone md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -101,27 +113,34 @@ export function Navbar() {
       <nav
         id="mobile-nav"
         aria-label="Mobile"
-        className={`overflow-hidden border-t border-ink/10 bg-cream transition-[max-height] duration-300 md:hidden ${
-          open ? "max-h-80" : "max-h-0 border-t-0"
+        className={`overflow-hidden border-t border-bone/10 bg-noir transition-[max-height] duration-300 md:hidden ${
+          open ? "max-h-96" : "max-h-0 border-t-0"
         }`}
       >
         <div className="flex flex-col gap-1 px-6 py-4">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink/80"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                aria-current={active ? "page" : undefined}
+                className={`flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] ${
+                  active ? "text-bone" : "text-bone/85"
+                }`}
+              >
+                {active && <span className="h-1 w-1 rounded-full bg-magenta" aria-hidden="true" />}
+                {link.label}
+              </Link>
+            );
+          })}
           <a
             href={SOCIAL.x}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${BRAND.name} on X`}
-            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink/80"
+            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-bone/85"
           >
             <XIcon className="h-4 w-4" />
             X

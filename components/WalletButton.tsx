@@ -18,8 +18,8 @@ export function WalletButton({ tone = "light", variant = "primary", className = 
       <div className={`inline-flex items-center gap-3 ${fullWidth ? "w-full" : ""}`}>
         <span
           title="Connected wallet address"
-          className={`rounded-full px-5 py-3 text-xs font-medium tracking-[0.15em] ${
-            tone === "dark" ? "bg-cream/10 text-cream" : "bg-ink/5 text-ink"
+          className={`px-5 py-3 text-xs font-medium tracking-[0.15em] ${
+            tone === "dark" ? "bg-bone/10 text-bone" : "bg-bone/5 text-bone"
           } ${fullWidth ? "flex-1 text-center" : ""}`}
         >
           {shortAddress}
@@ -29,7 +29,7 @@ export function WalletButton({ tone = "light", variant = "primary", className = 
           onClick={() => disconnect()}
           aria-label="Disconnect wallet"
           className={`text-xs uppercase tracking-[0.15em] underline-offset-4 hover:underline ${
-            tone === "dark" ? "text-cream/60 hover:text-cream" : "text-ink/50 hover:text-ink"
+            tone === "dark" ? "text-bone/75 hover:text-bone" : "text-bone/65 hover:text-bone"
           }`}
         >
           Disconnect
@@ -52,7 +52,7 @@ export function WalletButton({ tone = "light", variant = "primary", className = 
         {isConnecting ? "Connecting…" : "Connect Wallet"}
       </Button>
       {errorMessage && (
-        <p role="alert" className={`mt-2 text-xs ${tone === "dark" ? "text-cream/70" : "text-ink/60"}`}>
+        <p role="alert" className={`mt-2 text-xs ${tone === "dark" ? "text-bone/80" : "text-bone/70"}`}>
           {errorMessage}
         </p>
       )}

@@ -23,6 +23,7 @@ export interface Website {
 
 export interface Social {
   x: string;
+  github: string;
 }
 
 export interface Marketplace {
@@ -62,6 +63,7 @@ export const WEBSITE: Website = {
 
 export const SOCIAL: Social = {
   x: "https://x.com/NasalisFlow",
+  github: "https://github.com/Djnur07/nasalis-flow-engine",
 };
 
 // No smart contract yet, so this stays empty.

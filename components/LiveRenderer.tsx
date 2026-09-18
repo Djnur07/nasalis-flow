@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useId, useRef, useState } from "react";
 import { createEngine, generateHash, type Features } from "@/lib/liveRenderer";
+import { SOCIAL } from "@/lib/master-data";
 
 type LiveRendererProps = {
   /** Hash to render on mount. Omit to start from a freshly generated one. */
@@ -184,6 +185,18 @@ export function LiveRenderer({ initialHash, size = 900, showControls = true, cla
                     {copied ? "Copied" : "Copy"}
                   </button>
                 </div>
+
+                <p className="mt-2 text-xs uppercase tracking-[0.15em] text-gold">
+                  Open source —{" "}
+                  <a
+                    href={SOCIAL.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium underline underline-offset-2 transition-colors hover:text-ink"
+                  >
+                    View on GitHub
+                  </a>
+                </p>
               </>
             ) : (
               <p className="text-xs uppercase tracking-[0.2em] text-ink/40">Generating first render…</p>

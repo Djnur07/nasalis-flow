@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Breadcrumb } from "./Breadcrumb";
 import { GenerativePortrait } from "./GenerativePortrait";
 import { getCollectionImages } from "@/lib/artwork";
-import { BRAND, COLLECTION } from "@/lib/master-data";
+import { BRAND, COLLECTION, SOCIAL } from "@/lib/master-data";
 
 const LEDE = `${COLLECTION.name} is a collection of ${COLLECTION.totalSupply.toLocaleString()} generative portraits of the proboscis monkey (Nasalis larvatus), a primate endemic to Borneo whose survival is increasingly threatened by the loss of mangrove forest.`;
 
@@ -78,6 +78,18 @@ export function About() {
         </figure>
 
         <p className="text-base leading-relaxed text-bone/80">{PARAGRAPHS[1]}</p>
+
+        <p className="mt-8 text-base leading-relaxed text-bone/80">
+          Fully open-source —{" "}
+          <a
+            href={SOCIAL.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-4 hover:text-bone"
+          >
+            View on GitHub
+          </a>
+        </p>
       </div>
     </div>
   );

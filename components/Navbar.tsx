@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { WalletButton } from "./WalletButton";
 import { XIcon } from "./XIcon";
+import { GitHubIcon } from "./GitHubIcon";
 import { BRAND, SOCIAL } from "@/lib/master-data";
 
 const NAV_LINKS = [
@@ -95,6 +96,15 @@ export function Navbar() {
           >
             <XIcon className="h-4 w-4" />
           </a>
+          <a
+            href={SOCIAL.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${BRAND.name} on GitHub`}
+            className="text-bone/80 transition-colors hover:text-bone"
+          >
+            <GitHubIcon className="h-4 w-4" />
+          </a>
           <WalletButton tone="light" variant="primary" />
         </nav>
 
@@ -144,6 +154,16 @@ export function Navbar() {
           >
             <XIcon className="h-4 w-4" />
             X
+          </a>
+          <a
+            href={SOCIAL.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${BRAND.name} on GitHub`}
+            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-bone/85"
+          >
+            <GitHubIcon className="h-4 w-4" />
+            GitHub
           </a>
           <WalletButton tone="light" variant="primary" fullWidth className="mt-2" />
         </div>

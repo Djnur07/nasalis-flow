@@ -10,6 +10,18 @@
   --color-cyan: #74b8ae;
   --color-gold: #b98f57;
 
+  /* Redesign palette — dark/atmospheric, kept separate from the tokens
+     above so the untouched /live page's look is never affected. Bone,
+     turquoise and magenta are intentionally bright/luminous, echoing the
+     artwork's own white highlights, cyan lines and subtle magenta glints
+     against near-black. */
+  --color-noir: #0a0c0a;
+  --color-noir-soft: #0f1713;
+  --color-bone: #f8f6f0;
+  --color-amber: #b98f57;
+  --color-turquoise: #3fd6cc;
+  --color-magenta: #d17bb0;
+
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-fraunces);
 }

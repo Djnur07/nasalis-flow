@@ -27,7 +27,7 @@ export function HolderPreview() {
     useWallet();
 
   return (
-    <div className="flex h-full flex-col justify-center gap-8 border border-bone/15 bg-noir-soft px-8 py-12 sm:px-10 lg:min-h-[560px]">
+    <div className="flex h-full flex-col justify-center gap-8 border border-bone/15 bg-noir-soft px-8 py-12 sm:px-10 lg:px-6 xl:px-8">
       <div>
         <p className="text-xs uppercase tracking-[0.3em] text-turquoise">Holder Portal</p>
         <h2 className="mt-3 font-serif text-3xl text-bone">Your Nasalis</h2>

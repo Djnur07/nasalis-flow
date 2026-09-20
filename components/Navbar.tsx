@@ -13,6 +13,8 @@ const NAV_LINKS = [
   { label: "Collection", href: "/collection" },
   { label: "About", href: "/about" },
   { label: "Traits", href: "/traits" },
+  { label: "Roadmap", href: "/#roadmap" },
+  { label: "Utility", href: "/#utility" },
   { label: "Live", href: "/live" },
 ];
 
@@ -65,12 +67,12 @@ export function Navbar() {
         scrolled || open ? "border-b border-bone/10 bg-noir/85 backdrop-blur-sm" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
-        <Link href="/" className="font-serif text-lg tracking-wide text-bone">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5 sm:px-10">
+        <Link href="/" className="shrink-0 whitespace-nowrap font-serif text-lg tracking-wide text-bone">
           {BRAND.name}
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-10 md:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex xl:gap-8">
           {NAV_LINKS.map((link) => {
             const active = pathname === link.href;
             return (
@@ -110,7 +112,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center text-bone md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center text-bone lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -123,8 +125,8 @@ export function Navbar() {
       <nav
         id="mobile-nav"
         aria-label="Mobile"
-        className={`overflow-hidden border-t border-bone/10 bg-noir transition-[max-height] duration-300 md:hidden ${
-          open ? "max-h-96" : "max-h-0 border-t-0"
+        className={`overflow-hidden border-t border-bone/10 bg-noir transition-[max-height] duration-300 lg:hidden ${
+          open ? "max-h-[34rem]" : "max-h-0 border-t-0"
         }`}
       >
         <div className="flex flex-col gap-1 px-6 py-4">

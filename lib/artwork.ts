@@ -29,3 +29,27 @@ export function getCollectionImages(): string[] {
     return [];
   }
 }
+
+// Hand-picked cream-background portraits (public/images/hero-cream-*.png),
+// still available for other sections (e.g. About) that want a guaranteed cream look.
+const CREAM_PORTRAITS = [
+  "/images/hero-cream-1.png",
+  "/images/hero-cream-2.png",
+  "/images/hero-cream-3.png",
+  "/images/hero-cream-4.png",
+];
+
+export function getCreamPortraits(): string[] {
+  const publicDir = path.join(process.cwd(), "public");
+  return CREAM_PORTRAITS.filter((src) => fs.existsSync(path.join(publicDir, src.slice(1))));
+}
+
+/** Picks `count` random images from the full collection pool each time it's called. */
+export function getRandomPortraits(count: number): string[] {
+  const images = [...getCollectionImages()];
+  for (let i = images.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [images[i], images[j]] = [images[j], images[i]];
+  }
+  return images.slice(0, count);
+}

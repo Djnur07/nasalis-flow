@@ -94,7 +94,7 @@ export function WalletButton({
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="w-full max-w-sm border border-bone/15 bg-[#11110f] p-6 shadow-2xl"
+            className="w-full max-w-sm border border-bone/15 bg-noir-soft p-6 shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-6 flex items-center justify-between">

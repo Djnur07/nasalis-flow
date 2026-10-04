@@ -12,52 +12,42 @@ const { totalSupply: TOTAL_SUPPLY, previewCount: PREVIEW_COUNT } = COLLECTION;
 // unrelated files that may also live under /public/images.
 const NASALIS_IMAGE_PATTERN = /\/Nasalis-\d+\.png$/i;
 
-// The gallery grid runs 1/2/3 columns across breakpoints, so trimming down
-// to a multiple of 6 (their LCM) keeps every row full instead of leaving a
-// ragged, half-empty final row.
-const GRID_ALIGNMENT = 6;
-
-function alignToFullRows<T>(list: T[]): T[] {
-  if (list.length < GRID_ALIGNMENT) return list;
-  return list.slice(0, list.length - (list.length % GRID_ALIGNMENT));
-}
-
 export function Collection() {
-  const images = alignToFullRows(
-    getCollectionImages()
-      .filter((src) => NASALIS_IMAGE_PATTERN.test(src))
-      .slice(0, PREVIEW_COUNT),
-  );
-  const items =
-    images.length > 0
-      ? images.map((src, index) => ({ id: index + 1, src }))
-      : alignToFullRows(Array.from({ length: PREVIEW_COUNT }, (_, index) => ({ id: index + 1, src: undefined })));
+  const realImages = getCollectionImages()
+    .filter((src) => NASALIS_IMAGE_PATTERN.test(src))
+    .slice(0, PREVIEW_COUNT);
+
+  // Always exactly PREVIEW_COUNT items (50 = 10 cols x 5 rows), padding any
+  // gap with placeholder portraits so the grid never comes up short.
+  const items = Array.from({ length: PREVIEW_COUNT }, (_, index) => ({
+    id: index + 1,
+    src: realImages[index],
+  }));
 
   return (
-    <div className="mx-auto max-w-6xl px-6 pt-32 pb-28 sm:px-10">
+    <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-[1800px] flex-col px-8 pt-24 pb-10 sm:px-12">
       <Breadcrumb current="Collection" />
 
-      <header className="mt-6 max-w-2xl">
-        <h1 className="font-serif text-5xl text-bone sm:text-6xl">Collection</h1>
-        <p className="mt-4 text-xs uppercase tracking-[0.3em] text-turquoise">
+      <header className="mt-4 flex flex-col items-center text-center">
+        <h1 className="font-serif text-3xl text-bone sm:text-4xl">Collection</h1>
+        <p className="mt-1 text-[11px] uppercase tracking-[0.3em] text-turquoise">
           {TOTAL_SUPPLY.toLocaleString()} Generative Portraits
         </p>
-        <p className="mt-5 text-bone/75">
-          A gallery preview of the full {TOTAL_SUPPLY.toLocaleString()}-piece collection — each
-          portrait generated individually, with the nose, its core rarity trait, setting the tone
-          for everything else.
+        <p className="mt-3 max-w-xl text-sm text-bone/70">
+          A gallery preview — each portrait generated individually, with the nose, its core rarity
+          trait, setting the tone for everything else.
         </p>
       </header>
 
-      <div className="mt-16 grid grid-cols-1 gap-px bg-bone/10 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid flex-1 grid-cols-5 gap-1.5 sm:grid-cols-10">
         {items.map((item, index) => (
-          <ArtworkCard key={item.id} id={item.id} src={item.src} priority={index < 3} />
+          <ArtworkCard key={item.id} id={item.id} src={item.src} priority={index < 10} />
         ))}
       </div>
 
-      <div className="mt-16 flex flex-col items-center gap-3 text-center">
-        <p className="text-sm text-bone/60">Every portrait traces back to a single hash.</p>
-        <Button href="/live" tone="light" variant="outline">
+      <div className="mt-6 flex items-center justify-center gap-4">
+        <p className="text-xs text-bone/60">Every portrait traces back to a single hash.</p>
+        <Button href="/live" tone="light" variant="outline" className="!px-5 !py-2 text-[11px]">
           See It Rendered Live
         </Button>
       </div>

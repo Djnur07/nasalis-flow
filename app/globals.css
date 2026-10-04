@@ -10,20 +10,19 @@
   --color-cyan: #74b8ae;
   --color-gold: #b98f57;
 
-  /* Redesign palette — dark/atmospheric, kept separate from the tokens
-     above so the untouched /live page's look is never affected. Bone,
-     turquoise and magenta are intentionally bright/luminous, echoing the
-     artwork's own white highlights, cyan lines and subtle magenta glints
-     against near-black. */
-  --color-noir: #0a0c0a;
-  --color-noir-soft: #0f1713;
-  --color-bone: #f8f6f0;
-  --color-amber: #b98f57;
-  --color-turquoise: #3fd6cc;
-  --color-magenta: #d17bb0;
+  /* Redesign palette — now the cream/terracotta direction (Bekantan fur
+     tones), kept as its own token set separate from the ones above so the
+     untouched /live page's look is never affected. */
+  --color-noir: #f3ecdc;
+  --color-noir-soft: #efe6d2;
+  --color-bone: #211b11;
+  --color-amber: #8a3a24;
+  --color-turquoise: #b2552e;
+  --color-magenta: #8a3a24;
 
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-fraunces);
+  --font-mono: var(--font-geist-mono);
 }
 
 html {
@@ -56,9 +55,55 @@ body {
   animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes travel {
+  from {
+    left: -4%;
+  }
+  to {
+    left: 104%;
+  }
+}
+
+.animate-travel {
+  animation: travel 3.6s linear infinite;
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit-spin 5s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-up {
+  .animate-fade-up,
+  .animate-travel,
+  .animate-orbit {
     animation: none;
+  }
+
+  .animate-blink {
+    animation: none;
+    opacity: 1;
   }
 
   html {

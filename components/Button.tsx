@@ -17,12 +17,14 @@ type ButtonProps = CommonProps &
   ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
 
 const base =
-  "inline-flex items-center justify-center gap-2 px-7 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-colors duration-300 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-turquoise";
+  "inline-flex items-center justify-center gap-2 px-7 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-colors duration-300 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-rust";
 
+// "light" = for use on light/cream backgrounds (dark ink button).
+// "dark" = for use on dark/noir backgrounds (bone button, original style).
 const styles: Record<Tone, Record<Variant, string>> = {
   light: {
-    primary: "bg-bone text-noir hover:bg-amber",
-    outline: "border border-bone/25 text-bone hover:border-bone",
+    primary: "bg-ink text-cream hover:bg-charcoal",
+    outline: "border border-ink/25 text-ink hover:border-ink",
   },
   dark: {
     primary: "bg-bone text-noir hover:bg-amber",

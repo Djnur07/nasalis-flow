@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Breadcrumb } from "./Breadcrumb";
 import { GenerativePortrait } from "./GenerativePortrait";
-import { getCollectionImages } from "@/lib/artwork";
+import { getRandomPortraits } from "@/lib/artwork";
 import { BRAND, COLLECTION, SOCIAL } from "@/lib/master-data";
 
 const LEDE = `${COLLECTION.name} is a collection of ${COLLECTION.totalSupply.toLocaleString()} generative portraits of the proboscis monkey (Nasalis larvatus), a primate endemic to Borneo whose survival is increasingly threatened by the loss of mangrove forest.`;
@@ -12,84 +12,61 @@ const PARAGRAPHS = [
 ];
 
 export function About() {
-  const images = getCollectionImages();
-  const featureImage = images[2] ?? images[0];
-  const inlineImage = images[5] ?? images[1];
+  const images = getRandomPortraits(6);
 
   return (
-    <div className="pt-32 pb-28">
-      <div className="mx-auto max-w-6xl px-6 sm:px-10">
-        <Breadcrumb current="About" />
-        <h1 className="mt-6 max-w-2xl font-serif text-5xl text-bone sm:text-6xl">
-          About {BRAND.name}
-        </h1>
-      </div>
+    <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl flex-col px-6 pt-20 pb-8 sm:px-10">
+      <Breadcrumb current="About" />
 
-      <figure className="mx-auto mt-14 max-w-5xl px-6 sm:px-10">
-        <div className="aspect-[16/9] w-full overflow-hidden border border-bone/10 bg-noir-soft">
-          {featureImage ? (
-            <Image
-              src={featureImage}
-              alt={`${BRAND.name} generative portrait`}
-              width={1600}
-              height={900}
-              className="h-full w-full object-cover"
-              priority
-            />
-          ) : (
+      <div className="mt-6 grid flex-1 items-center gap-10 lg:grid-cols-[1fr_1fr]">
+        {images.length > 0 ? (
+          <div className="grid grid-cols-3 gap-1.5">
+            {images.map((src, index) => (
+              <div
+                key={src}
+                className="relative aspect-square overflow-hidden border border-bone/10 bg-noir-soft"
+              >
+                <Image
+                  src={src}
+                  alt={`${BRAND.name} generative portrait ${index + 1}`}
+                  fill
+                  priority={index < 3}
+                  sizes="(min-width: 1024px) 14vw, 30vw"
+                  className="object-contain"
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="relative aspect-square overflow-hidden border border-bone/10 bg-noir-soft">
             <GenerativePortrait
               seed={7}
               label={`${BRAND.name} generative portrait — placeholder artwork`}
               className="h-full w-full"
             />
-          )}
-        </div>
-        <figcaption className="mt-3 text-[11px] uppercase tracking-[0.25em] text-bone/50">
-          Fig. 01 — Nasalis Flow generative portrait
-        </figcaption>
-      </figure>
-
-      <div className="mx-auto mt-16 max-w-2xl px-6 sm:px-10">
-        <p className="font-serif text-2xl leading-snug text-bone sm:text-3xl">{LEDE}</p>
-
-        <p className="mt-8 text-base leading-relaxed text-bone/80">{PARAGRAPHS[0]}</p>
-
-        <figure className="my-10">
-          <div className="aspect-[4/5] w-full max-w-sm overflow-hidden border border-bone/10 bg-noir-soft">
-            {inlineImage ? (
-              <Image
-                src={inlineImage}
-                alt={`${BRAND.name} generative portrait detail`}
-                width={640}
-                height={800}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <GenerativePortrait
-                seed={19}
-                label={`${BRAND.name} generative portrait detail — placeholder artwork`}
-                className="h-full w-full"
-              />
-            )}
           </div>
-          <figcaption className="mt-3 text-[11px] uppercase tracking-[0.25em] text-bone/50">
-            Fig. 02 — Detail, nose-class variation
-          </figcaption>
-        </figure>
+        )}
 
-        <p className="text-base leading-relaxed text-bone/80">{PARAGRAPHS[1]}</p>
+        <div>
+          <h1 className="font-serif text-4xl text-bone sm:text-5xl">About {BRAND.name}</h1>
 
-        <p className="mt-8 text-base leading-relaxed text-bone/80">
-          Fully open-source —{" "}
-          <a
-            href={SOCIAL.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-4 hover:text-bone"
-          >
-            View on GitHub
-          </a>
-        </p>
+          <p className="mt-5 text-sm leading-relaxed text-bone/80">{LEDE}</p>
+
+          <p className="mt-5 text-sm leading-relaxed text-bone/80">{PARAGRAPHS[0]}</p>
+          <p className="mt-3 text-sm leading-relaxed text-bone/80">{PARAGRAPHS[1]}</p>
+
+          <p className="mt-5 text-sm leading-relaxed text-bone/80">
+            Fully open-source —{" "}
+            <a
+              href={SOCIAL.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:text-bone"
+            >
+              View on GitHub
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

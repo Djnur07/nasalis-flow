@@ -60,13 +60,13 @@ const UTILITY: UtilityItem[] = [
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** Short, thin flowing-line accent that sits under each column heading. */
+/** Short, thin flowing-line accent that sits under each section heading. */
 function FlowAccent() {
   return (
     <svg
       aria-hidden="true"
       viewBox="0 0 240 24"
-      className="mt-4 h-5 w-32 text-turquoise xl:mt-2 xl:h-4 xl:w-28"
+      className="mt-4 h-5 w-32 text-turquoise"
       fill="none"
       stroke="currentColor"
       strokeWidth="1"
@@ -78,33 +78,52 @@ function FlowAccent() {
   );
 }
 
-const HEADING = "font-serif text-4xl uppercase tracking-[0.08em] text-bone lg:text-3xl xl:text-3xl xl:leading-none";
-const NUMBER = "pt-px font-mono text-xs tracking-[0.12em] text-neutral-200 xl:text-[11px]";
-const TITLE =
-  "text-xs font-semibold uppercase tracking-[0.14em] text-bone xl:leading-[14px] xl:tracking-[0.18em]";
-const BODY = "text-[13px] leading-snug text-neutral-200 xl:text-[12.5px] xl:leading-[1.35]";
-const ITEM =
-  "grid grid-cols-[1.75rem_1fr] gap-x-3 border-t border-bone/20 py-3.5 last:border-b xl:grid-cols-[1.5rem_1fr] xl:gap-x-2 xl:py-2";
+/** A small glowing dot that travels left-to-right along the top border of its card, echoing a signal pulse. `delay` staggers items so they don't all pulse in sync. */
+function TravelDot({ delay = 0 }: { delay?: number }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="animate-travel absolute top-0 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-turquoise shadow-[0_0_6px_1px_rgba(178,85,46,0.5)]"
+      style={{ animationDelay: `${delay}s` }}
+    />
+  );
+}
 
-/** Roadmap column of the Hero composition (anchor target for the "Roadmap" nav link). */
+/** Small spinning ring with a single bright node — a quiet nod to an orbiting process/algorithm running. `duration` varies slightly per item so the row doesn't move in lockstep. */
+function OrbitIcon({ duration = 5 }: { duration?: number }) {
+  return (
+    <span aria-hidden="true" className="relative inline-block h-4 w-4 shrink-0">
+      <span
+        className="animate-orbit absolute inset-0 rounded-full border border-bone/25"
+        style={{ animationDuration: `${duration}s` }}
+      >
+        <span className="absolute -top-[2px] left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-turquoise" />
+      </span>
+    </span>
+  );
+}
+
+const HEADING = "font-serif text-4xl uppercase tracking-[0.08em] text-bone";
+const NUMBER = "font-mono text-xs tracking-[0.12em] text-bone/45";
+const TITLE = "text-sm font-semibold uppercase tracking-[0.1em] text-bone";
+const BODY = "text-[13px] leading-relaxed text-bone/65";
+
+/** Roadmap section — nine phases laid out as a three-column grid. */
 export function Roadmap() {
   return (
-    <section id="roadmap" aria-labelledby="roadmap-heading" className="lg:flex lg:flex-col">
+    <section id="roadmap" aria-labelledby="roadmap-heading">
       <h2 id="roadmap-heading" className={HEADING}>
         Roadmap
       </h2>
       <FlowAccent />
 
-      {/* From lg up the list stretches to the full row height so Roadmap ends
-          level with the taller Utility column. */}
-      <ol className="mt-7 lg:flex lg:flex-1 lg:flex-col xl:mt-3">
+      <ol className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {ROADMAP.map((item, index) => (
-          <li key={item.title} className={`${ITEM} lg:flex-1`}>
+          <li key={item.title} className="relative border-t border-bone/20 pt-5">
+            <TravelDot delay={index * 0.4} />
             <span className={NUMBER}>{pad(index + 1)}</span>
-            <div>
-              <h3 className={TITLE}>{item.title}</h3>
-              <p className={`mt-1 xl:mt-0.5 ${BODY}`}>{item.description}</p>
-            </div>
+            <h3 className={`mt-2 ${TITLE}`}>{item.title}</h3>
+            <p className={`mt-2 ${BODY}`}>{item.description}</p>
           </li>
         ))}
       </ol>
@@ -112,7 +131,7 @@ export function Roadmap() {
   );
 }
 
-/** Utility column of the Hero composition (anchor target for the "Utility" nav link). */
+/** Utility section — six cards laid out as a three-column grid. */
 export function Utility() {
   return (
     <section id="utility" aria-labelledby="utility-heading">
@@ -121,17 +140,17 @@ export function Utility() {
       </h2>
       <FlowAccent />
 
-      <ol className="mt-7 xl:mt-3">
+      <ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {UTILITY.map((item, index) => (
-          <li key={item.title} className={ITEM}>
-            <span className={NUMBER}>{pad(index + 1)}</span>
-            <div>
-              <h3 className={TITLE}>{item.title}</h3>
-              <p className="mt-1.5 font-serif text-base leading-snug text-bone xl:mt-0.5 xl:text-[15px] xl:leading-tight">
-                {item.tagline}
-              </p>
-              <p className={`mt-1.5 xl:mt-0.5 ${BODY}`}>{item.description}</p>
+          <li key={item.title} className="border border-bone/15 bg-noir-soft/60 p-6">
+            <div className="flex items-center gap-3">
+              <OrbitIcon duration={4.2 + index * 0.6} />
+              <span className={TITLE}>
+                {pad(index + 1)} {item.title}
+              </span>
             </div>
+            <p className="mt-4 font-serif text-base leading-snug text-bone">{item.tagline}</p>
+            <p className={`mt-2 ${BODY}`}>{item.description}</p>
           </li>
         ))}
       </ol>

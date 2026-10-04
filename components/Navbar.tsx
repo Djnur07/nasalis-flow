@@ -59,15 +59,29 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
+  // Next.js can keep the previous scroll position when navigating back to a
+  // page you'd already scrolled down on (e.g. Home after viewing Roadmap/
+  // Utility). Force the viewport to the top whenever a "/" link is used.
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    }
+  };
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open ? "border-b border-bone/10 bg-noir/85 backdrop-blur-sm" : "bg-transparent"
+        scrolled || open ? "border-b border-ink/10 bg-cream/90 backdrop-blur-sm" : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5 sm:px-10">
-        <Link href="/" className="shrink-0 whitespace-nowrap font-serif text-lg tracking-wide text-bone">
+        <Link
+          href="/"
+          onClick={scrollToTop}
+          className="shrink-0 whitespace-nowrap font-serif text-lg tracking-wide text-ink"
+        >
           {BRAND.name}
+          <span className="ml-1 inline-block h-4 w-[2px] translate-y-0.5 animate-blink bg-rust align-middle" aria-hidden="true" />
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex xl:gap-8">
@@ -77,13 +91,14 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={link.href === "/" ? scrollToTop : undefined}
                 aria-current={active ? "page" : undefined}
                 className={`relative pb-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
-                  active ? "text-bone" : "text-bone/80 hover:text-bone"
+                  active ? "text-ink" : "text-ink/70 hover:text-ink"
                 }`}
               >
                 {link.label}
-                {active && <span className="absolute inset-x-0 -bottom-0.5 h-px bg-magenta" aria-hidden="true" />}
+                {active && <span className="absolute inset-x-0 -bottom-0.5 h-px bg-rust" aria-hidden="true" />}
               </Link>
             );
           })}
@@ -92,7 +107,7 @@ export function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${BRAND.name} on X`}
-            className="text-bone/80 transition-colors hover:text-bone"
+            className="text-ink/60 transition-colors hover:text-ink"
           >
             <XIcon className="h-4 w-4" />
           </a>
@@ -101,7 +116,7 @@ export function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${BRAND.name} on GitHub`}
-            className="text-bone/80 transition-colors hover:text-bone"
+            className="text-ink/60 transition-colors hover:text-ink"
           >
             <GitHubIcon className="h-4 w-4" />
           </a>
@@ -110,7 +125,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center text-bone lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center text-ink lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -123,7 +138,7 @@ export function Navbar() {
       <nav
         id="mobile-nav"
         aria-label="Mobile"
-        className={`overflow-hidden border-t border-bone/10 bg-noir transition-[max-height] duration-300 lg:hidden ${
+        className={`overflow-hidden border-t border-ink/10 bg-cream transition-[max-height] duration-300 lg:hidden ${
           open ? "max-h-[34rem]" : "max-h-0 border-t-0"
         }`}
       >
@@ -134,13 +149,16 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  if (link.href === "/") scrollToTop();
+                }}
                 aria-current={active ? "page" : undefined}
                 className={`flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] ${
-                  active ? "text-bone" : "text-bone/85"
+                  active ? "text-ink" : "text-ink/75"
                 }`}
               >
-                {active && <span className="h-1 w-1 rounded-full bg-magenta" aria-hidden="true" />}
+                {active && <span className="h-1 w-1 rounded-full bg-rust" aria-hidden="true" />}
                 {link.label}
               </Link>
             );
@@ -150,7 +168,7 @@ export function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${BRAND.name} on X`}
-            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-bone/85"
+            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink/75"
           >
             <XIcon className="h-4 w-4" />
             X
@@ -160,7 +178,7 @@ export function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${BRAND.name} on GitHub`}
-            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-bone/85"
+            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink/75"
           >
             <GitHubIcon className="h-4 w-4" />
             GitHub

@@ -70,21 +70,19 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open ? "border-b border-ink/10 bg-cream/90 backdrop-blur-sm" : "bg-transparent"
-      }`}
+      className="fixed inset-x-0 top-0 z-50 transition-colors duration-300"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5 sm:px-10">
+      <div className="relative w-full flex items-center justify-between gap-6 bg-cream/90 px-6 py-8 backdrop-blur-sm sm:px-10">
         <Link
           href="/"
           onClick={scrollToTop}
-          className="shrink-0 whitespace-nowrap font-serif text-lg tracking-wide text-ink"
+          className="absolute left-8 top-6 shrink-0 whitespace-nowrap font-serif text-lg tracking-wide text-ink"
         >
           {BRAND.name}
           <span className="ml-1 inline-block h-4 w-[2px] translate-y-0.5 animate-blink bg-rust align-middle" aria-hidden="true" />
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex xl:gap-8">
+        <nav aria-label="Primary" className="absolute right-12 top-5 hidden items-center gap-4 lg:flex xl:gap-8">
           {NAV_LINKS.map((link) => {
             const active = pathname === link.href;
             return (
@@ -93,7 +91,7 @@ export function Navbar() {
                 href={link.href}
                 onClick={link.href === "/" ? scrollToTop : undefined}
                 aria-current={active ? "page" : undefined}
-                className={`relative pb-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
+                className={`relative pb-2 translate-y-1 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
                   active ? "text-ink" : "text-ink/70 hover:text-ink"
                 }`}
               >
@@ -102,6 +100,13 @@ export function Navbar() {
               </Link>
             );
           })}
+          <a
+            href="/nasalis-flow-studio.html"
+            aria-label="Nasalis Studio"
+            className="relative pb-2 translate-y-1 text-xs font-medium uppercase tracking-[0.2em] text-ink/70 transition-colors hover:text-ink"
+          >
+            Nasalis Studio
+          </a>
           <a
             href={SOCIAL.x}
             target="_blank"
@@ -163,6 +168,13 @@ export function Navbar() {
               </Link>
             );
           })}
+          <a
+            href="/nasalis-flow-studio.html"
+            aria-label="Nasalis Studio"
+            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink/75"
+          >
+            Nasalis Studio
+          </a>
           <a
             href={SOCIAL.x}
             target="_blank"

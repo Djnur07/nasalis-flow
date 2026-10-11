@@ -2,12 +2,7 @@ import Link from "next/link";
 import { XIcon } from "./XIcon";
 import { BRAND, COLLECTION, MARKETPLACE, SOCIAL } from "@/lib/master-data";
 
-const EXPLORE_LINKS = [
-  { label: "Collection", href: "/collection" },
-  { label: "About", href: "/about" },
-  { label: "Traits", href: "/traits" },
-  { label: "Live", href: "/live" },
-];
+
 
 const SOCIAL_LINKS = [
   { label: "OpenSea", href: MARKETPLACE.openSea || "#" },
@@ -25,18 +20,7 @@ export function Footer() {
         </div>
 
         <nav aria-label="Footer" className="flex flex-wrap gap-x-12 gap-y-8 text-sm">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Explore</p>
-            <ul className="mt-3 space-y-3">
-              {EXPLORE_LINKS.map((link) => (
-                <li key={link.label}>
-                  <Link className="text-ink/72 transition-colors hover:text-ink" href={link.href}>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Social</p>
             <ul className="mt-3 space-y-3">
@@ -49,7 +33,7 @@ export function Footer() {
                   aria-label={`${BRAND.name} on X`}
                 >
                   <XIcon className="h-3.5 w-3.5" />
-                  X
+ 
                 </a>
               </li>
               {SOCIAL_LINKS.map((link) => (

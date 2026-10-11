@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nasalis Flow Studio — Generative Algorithmic Art</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0B0C10',
+                        darkCard: '#151922',
+                        darkBorder: '#2A3445',
+                        cream: '#F4F1EA',
+                        gold: '#C5A880',
+                        goldHover: '#D8BC93',
+                        emeraldFlow: '#00FA9A',
+                        tealDark: '#0d3235'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #0B0C10;
+            color: #F4F1EA;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .font-serif {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Custom Glassmorphism */
+        .glass-panel {
+            background: rgba(21, 25, 34, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(197, 168, 128, 0.15);
+        }
+
+        .glass-card {
+            background: rgba(25, 30, 42, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(197, 168, 128, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px -10px rgba(197, 168, 128, 0.15);
+        }
+
+        /* Gold Gradient Text */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #F4F1EA 0%, #C5A880 50%, #E2C092 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Flow Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0C10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2A3445;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C5A880;
+        }
+
+        /* Canvas Overlay glow */
+        .hero-glow {
+            background: radial-gradient(circle at 50% 50%, rgba(197, 168, 128, 0.08) 0%, rgba(11, 12, 16, 0) 70%);
+        }
+
+        /* Modal Blur */
+        .modal-backdrop {
+            background: rgba(11, 12, 16, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Custom Toast Notification */
+        #toast {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-gold selection:text-darkBg">
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 right-0 z-40 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full border border-gold/40 flex items-center justify-center bg-darkCard/80 group-hover:border-gold transition-colors">
+                    <svg class="w-6 h-6 text-gold transition-transform group-hover:rotate-45 duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/>
+                        <path d="M8 12c1.5-3 4-4 8-1M8 16c2.5-1 5-1 8-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-serif text-lg font-bold tracking-wider gold-gradient-text block leading-none">NASALIS</span>
+                    <span class="text-[10px] uppercase tracking-[0.25em] text-cream/60 font-medium">Flow Studio</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-cream/70">
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-4">
+                <button onclick="openWalletModal()" id="walletBtn" class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-gold/40 text-gold hover:bg-gold hover:text-darkBg transition-all duration-300 flex items-center gap-2 shadow-lg shadow-gold/5">
+                    <i data-lucide="wallet" class="w-4 h-4"></i>
+                    <span id="walletBtnText">Connect Wallet</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden">
+        <!-- Background Canvas for Generative Flow Art -->
+        <canvas id="heroCanvas" class="absolute inset-0 w-full h-full object-cover z-0"></canvas>
+        <div class="absolute inset-0 hero-glow pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-darkBg/30 via-transparent to-darkBg pointer-events-none"></div>
+
+        <div class="absolute top-24 left-8 z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-darkCard/60 text-gold text-xs tracking-widest uppercase mb-6 backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-emeraldFlow animate-ping"></span>
+                <span>Generative Vector Flow Algorithm</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection Gallery Section -->
+
+    <!-- Interactive Generative Previewer / Sandbox -->
+
+    <!-- Project Story & Conservation Mission -->
+
+    <!-- Roadmap Timeline Section -->
+
+    <!-- Minting Section / Widget -->
+
+    <!-- Footer -->
+    <footer class="py-12 bg-darkBg border-t border-cream/10 text-xs text-cream/50">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-full border border-gold/40 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/>
+                    </svg>
+                </div>
+                <span class="font-serif text-sm font-bold text-cream">Nasalis Flow Studio</span>
+            </div>
+
+            <p>© 2026 Nasalis Flow Studio. All rights reserved. Generative Art Project for Wildlife Conservation.</p>
+
+            <div class="flex items-center gap-5">
+                <a href="#" class="hover:text-gold transition-colors" title="Twitter / X"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                <a href="#" class="hover:text-gold transition-colors" title="Discord"><i data-lucide="disc" class="w-4 h-4"></i></a>
+                <a href="#" class="hover:text-gold transition-colors" title="OpenSea"><i data-lucide="ship" class="w-4 h-4"></i></a>
+                <a href="#" class="hover:text-gold transition-colors" title="Etherscan"><i data-lucide="code" class="w-4 h-4"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Wallet Modal -->
+    <div id="walletModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+        <div class="bg-darkCard border border-gold/30 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
+            <button onclick="closeWalletModal()" class="absolute top-5 right-5 text-cream/50 hover:text-cream">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <h3 class="font-serif text-2xl font-bold text-cream mb-2">Connect Wallet</h3>
+            <p class="text-xs text-cream/60 mb-6">Select your Ethereum web3 provider to interact with Nasalis Flow Studio.</p>
+
+            <div class="space-y-3">
+                <button onclick="connectWallet('MetaMask')" class="w-full p-4 rounded-xl glass-card hover:border-gold flex items-center justify-between text-sm font-medium text-cream">
+                    <span class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-orange-500"></span> MetaMask
+                    </span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-cream/40"></i>
+                </button>
+                <button onclick="connectWallet('WalletConnect')" class="w-full p-4 rounded-xl glass-card hover:border-gold flex items-center justify-between text-sm font-medium text-cream">
+                    <span class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-blue-500"></span> WalletConnect
+                    </span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-cream/40"></i>
+                </button>
+                <button onclick="connectWallet('Phantom')" class="w-full p-4 rounded-xl glass-card hover:border-gold flex items-center justify-between text-sm font-medium text-cream">
+                    <span class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-purple-500"></span> Phantom / Solana
+                    </span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-cream/40"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Artwork Modal Preview -->
+    <div id="nftModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+        <div class="bg-darkCard border border-gold/30 rounded-3xl p-6 sm:p-8 max-w-2xl w-full relative shadow-2xl flex flex-col md:flex-row gap-6">
+            <button onclick="closeNftModal()" class="absolute top-5 right-5 text-cream/50 hover:text-cream z-10">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="w-full md:w-1/2 aspect-square rounded-2xl overflow-hidden bg-darkBg relative">
+                <canvas id="modalCanvas" class="w-full h-full"></canvas>
+            </div>
+
+            <div class="w-full md:w-1/2 flex flex-col justify-between space-y-4">
+                <div>
+                    <span class="text-[10px] uppercase font-mono text-gold tracking-widest" id="modalTokenTag">Token #001</span>
+                    <h3 class="font-serif text-2xl font-bold text-cream mt-1" id="modalTitle">Nasalis Flow #001</h3>
+                    <p class="text-xs text-cream/60 mt-2" id="modalDesc">Generative flow vector with distinct warm cream strand structures.</p>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <span class="text-cream/50 uppercase tracking-wider font-semibold block text-[10px]">Trait Properties</span>
+                    <div class="grid grid-cols-2 gap-2" id="modalTraits">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <button onclick="executeMintModal()" class="w-full py-3 rounded-xl bg-gold text-darkBg font-semibold text-xs uppercase tracking-wider hover:bg-goldHover transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Mint Similar Seed
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Box -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 glass-panel px-5 py-4 rounded-2xl border border-gold/40 shadow-2xl flex items-center gap-3">
+        <div id="toastIcon" class="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <div>
+            <h4 id="toastTitle" class="text-xs font-bold text-cream">Notification</h4>
+            <p id="toastMessage" class="text-[11px] text-cream/70">Operation completed successfully.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic & Algorithmic Generative Canvas Engine -->
+    <script>
+        // Lucide Icons Render
+        lucide.createIcons();
+
+        // Application State
+        let walletConnected = false;
+        let connectedAddress = '';
+        let currentMintQty = 1;
+        let totalMinted = 428;
+        const pricePerUnit = 0.08;
+
+        // Custom Simplified Perlin Noise / Vector Flow Math for Dynamic Visuals
+        class FlowFieldGenerator {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.numParticles = 350;
+                this.speed = 1.8;
+                this.curl = 0.015;
+                this.thickness = 1.2;
+                this.palette = 'gold';
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.mouseActive = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.resetParticles();
+            }
+
+            resize() {
+                const rect = this.canvas.getBoundingClientRect();
+                this.canvas.width = rect.width || 400;
+                this.canvas.height = rect.height || 400;
+            }
+
+            resetParticles() {
+                this.particles = [];
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+                const centerX = w / 2;
+                const centerY = h / 2;
+
+                for (let i = 0; i < this.numParticles; i++) {
+                    // Seed initial points forming stylized Nasalis silhouette contours
+                    const angle = Math.random() * Math.PI * 2;
+                    const r = Math.random() * (w * 0.35);
+                    this.particles.push({
+                        x: centerX + Math.cos(angle) * r * 0.8,
+                        y: centerY + Math.sin(angle) * r,
+                        vx: 0,
+                        vy: 0,
+                        life: Math.random() * 200 + 50,
+                        maxLife: 250,
+                        color: this.getColor(i / this.numParticles)
+                    });
+                }
+
+                // Initial Background Fill based on Palette
+                this.ctx.fillStyle = this.getBgColor();
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+
+            getBgColor() {
+                if (this.palette === 'cream') return '#F4F1EA';
+                return '#0B0C10';
+            }
+
+            getColor(t) {
+                if (this.palette === 'emerald') {
+                    return `rgba(${Math.floor(0 + t * 50)}, ${Math.floor(200 + t * 55)}, ${Math.floor(150 + t * 80)}, 0.4)`;
+                } else if (this.palette === 'cream') {
+                    return `rgba(${Math.floor(40 + t * 40)}, ${Math.floor(35 + t * 30)}, ${Math.floor(30 + t * 20)}, 0.45)`;
+                } else if (this.palette === 'neon') {
+                    return `rgba(${Math.floor(200 + t * 55)}, ${Math.floor(50 + t * 100)}, ${Math.floor(200 + t * 55)}, 0.4)`;
+                }
+                // Gold Default
+                return `rgba(${Math.floor(197 + t * 40)}, ${Math.floor(168 + t * 30)}, ${Math.floor(128 - t * 40)}, 0.45)`;
+            }
+
+            getVectorAngle(x, y) {
+                const cx = this.canvas.width / 2;
+                const cy = this.canvas.height / 2;
+                
+                // Distance to central monkey nose/head silhouette
+                const dx = x - cx;
+                const dy = y - cy;
+                
+                // Simulating Proboscis nose curve pull
+                const noseFactor = Math.sin(dy * 0.02) * 20;
+                
+                let angle = Math.atan2(dy, dx + noseFactor) + Math.sin(x * this.curl) * 2 + Math.cos(y * this.curl) * 2;
+                
+                if (this.mouseActive) {
+                    const mdx = x - this.mouseX;
+                    const mdy = y - this.mouseY;
+                    const dist = Math.sqrt(mdx * mdx + mdy * mdy);
+                    if (dist < 150) {
+                        angle += (150 - dist) * 0.01;
+                    }
+                }
+                return angle;
+            }
+
+            step() {
+                // Subtle fade overlay for smooth strand trailing
+                this.ctx.fillStyle = this.palette === 'cream' ? 'rgba(244, 241, 234, 0.04)' : 'rgba(11, 12, 16, 0.04)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.ctx.lineWidth = this.thickness;
+
+                for (let p of this.particles) {
+                    const angle = this.getVectorAngle(p.x, p.y);
+                    p.vx = Math.cos(angle) * this.speed;
+                    p.vy = Math.sin(angle) * this.speed;
+
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p.x, p.y);
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    this.ctx.lineTo(p.x, p.y);
+                    this.ctx.strokeStyle = p.color;
+                    this.ctx.stroke();
+
+                    p.life--;
+
+                    // Respawn expired strands inside center
+                    if (p.life <= 0 || p.x < 0 || p.x > this.canvas.width || p.y < 0 || p.y > this.canvas.height) {
+                        const a = Math.random() * Math.PI * 2;
+                        const r = Math.random() * (this.canvas.width * 0.3);
+                        p.x = this.canvas.width / 2 + Math.cos(a) * r;
+                        p.y = this.canvas.height / 2 + Math.sin(a) * r;
+                        p.life = p.maxLife;
+                    }
+                }
+            }
+        }
+
+        // Initialize Hero Canvas Animation
+        let heroFlow, sandboxFlow, storyFlow;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Hero Canvas setup
+            const heroCanvas = document.getElementById('heroCanvas');
+            heroFlow = new FlowFieldGenerator(heroCanvas);
+            heroFlow.numParticles = 500;
+            heroFlow.resetParticles();
+
+            // Master Animation Loop
+            function animateLoop() {
+                heroFlow.step();
+                requestAnimationFrame(animateLoop);
+            }
+            animateLoop();
+        });
+
+        // Window Resize Handling
+        window.addEventListener('resize', () => {
+            if (heroFlow) heroFlow.resize();
+            if (sandboxFlow) sandboxFlow.resize();
+            if (storyFlow) storyFlow.resize();
+        });
+
+        // Gallery Collection Data
+        const galleryNFTs = [
+            { id: '001', name: 'Nasalis Flow #001', category: 'gold', palette: 'gold', density: 'High', rarity: 'Top 2%', hue: '24° Amber' },
+            { id: '002', name: 'Nasalis Flow #002', category: 'dark', palette: 'gold', density: 'Ultra', rarity: 'Top 5%', hue: '18° Gold' },
+            { id: '003', name: 'Nasalis Flow #003', category: 'beige', palette: 'cream', density: 'Minimal', rarity: 'Top 1%', hue: 'Monochrome' },
+            { id: '004', name: 'Nasalis Flow #004', category: 'emerald', palette: 'emerald', density: 'Medium', rarity: 'Top 8%', hue: '160° Emerald' },
+            { id: '005', name: 'Nasalis Flow #005', category: 'beige', palette: 'cream', density: 'Dense', rarity: 'Top 3%', hue: 'Sand Cream' },
+            { id: '006', name: 'Nasalis Flow #006', category: 'emerald', palette: 'emerald', density: 'Ultra', rarity: 'Top 4%', hue: '145° Jade' },
+            { id: '007', name: 'Nasalis Flow #007', category: 'dark', palette: 'gold', density: 'Sparse', rarity: 'Top 12%', hue: 'Dark Bronze' },
+            { id: '008', name: 'Nasalis Flow #008', category: 'gold', palette: 'gold', density: 'High', rarity: 'Top 6%', hue: 'Golden Silk' }
+        ];
+
+        function populateGallery() {
+            const grid = document.getElementById('nftGrid');
+            grid.innerHTML = '';
+
+            galleryNFTs.forEach((nft, index) => {
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-2xl overflow-hidden border border-cream/10 flex flex-col justify-between group cursor-pointer nft-card`;
+                card.dataset.category = nft.category;
+
+                card.onclick = () => openNftModal(nft);
+
+                card.innerHTML = `
+                    <div class="relative aspect-square bg-darkBg overflow-hidden">
+                        <canvas id="cardCanvas_${nft.id}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"></canvas>
+                        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-darkBg/80 text-gold border border-gold/30 backdrop-blur-md">
+                            ${nft.rarity}
+                        </div>
+                    </div>
+                    <div class="p-4 flex justify-between items-center bg-darkCard/60 border-t border-cream/5">
+                        <div>
+                            <h4 class="font-serif text-sm font-bold text-cream group-hover:text-gold transition-colors">${nft.name}</h4>
+                            <p class="text-[11px] text-cream/50 mt-0.5">${nft.density} Density • ${nft.hue}</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full border border-cream/20 flex items-center justify-center text-cream group-hover:border-gold group-hover:text-gold transition-all">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                // Render mini static visual generator onto each card canvas
+                setTimeout(() => {
+                    const canvas = document.getElementById(`cardCanvas_${nft.id}`);
+                    if (canvas) {
+                        const miniFlow = new FlowFieldGenerator(canvas);
+                        miniFlow.palette = nft.palette;
+                        miniFlow.numParticles = 220;
+                        miniFlow.resetParticles();
+                        for (let i = 0; i < 180; i++) miniFlow.step();
+                    }
+                }, 100 * index);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Gallery Filter Handler
+        function filterGallery(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.className = 'filter-btn active px-4 py-2 rounded-full transition-all bg-gold text-darkBg font-semibold';
+                } else {
+                    btn.className = 'filter-btn px-4 py-2 rounded-full text-cream/70 hover:text-cream transition-all';
+                }
+            });
+
+            const cards = document.querySelectorAll('.nft-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Sandbox Controls Event Handlers
+        function setupSandboxControls() {
+            const density = document.getElementById('paramDensity');
+            const speed = document.getElementById('paramSpeed');
+            const curl = document.getElementById('paramCurl');
+            const thickness = document.getElementById('paramThickness');
+
+            density.addEventListener('input', (e) => {
+                document.getElementById('valDensity').innerText = e.target.value;
+                sandboxFlow.numParticles = parseInt(e.target.value);
+                sandboxFlow.resetParticles();
+            });
+
+            speed.addEventListener('input', (e) => {
+                document.getElementById('valSpeed').innerText = e.target.value;
+                sandboxFlow.speed = parseFloat(e.target.value);
+            });
+
+            curl.addEventListener('input', (e) => {
+                document.getElementById('valCurl').innerText = e.target.value;
+                sandboxFlow.curl = parseFloat(e.target.value);
+            });
+
+            thickness.addEventListener('input', (e) => {
+                document.getElementById('valThickness').innerText = e.target.value + 'px';
+                sandboxFlow.thickness = parseFloat(e.target.value);
+            });
+        }
+
+        function setSandboxPalette(paletteName) {
+            sandboxFlow.palette = paletteName;
+            sandboxFlow.resetParticles();
+            showToast('Palette Updated', `Applied ${paletteName.toUpperCase()} vector gradient palette.`);
+        }
+
+        function regenerateSandbox() {
+            const randomSeed = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+            document.getElementById('sandboxSeedTag').innerText = `Seed: #${randomSeed}`;
+            sandboxFlow.resetParticles();
+            showToast('Seed Generated', `Morphing flow lines to seed #${randomSeed}`);
+        }
+
+        // Wallet Modal Logic
+        function openWalletModal() {
+            document.getElementById('walletModal').classList.remove('hidden');
+        }
+
+        function closeWalletModal() {
+            document.getElementById('walletModal').classList.add('hidden');
+        }
+
+        function connectWallet(provider) {
+            walletConnected = true;
+            connectedAddress = '0x71C...' + Math.floor(Math.random() * 8999 + 1000);
+            
+            document.getElementById('walletBtnText').innerText = connectedAddress;
+            document.getElementById('walletBtn').classList.add('bg-gold/10', 'border-gold');
+            
+            closeWalletModal();
+            showToast('Wallet Connected', `Successfully authenticated with ${provider} (${connectedAddress})`);
+        }
+
+        // Minting Widget Logic
+        function adjustMintQuantity(delta) {
+            currentMintQty = Math.max(1, Math.min(5, currentMintQty + delta));
+            document.getElementById('mintQuantity').innerText = currentMintQty;
+            const total = (currentMintQty * pricePerUnit).toFixed(2);
+            document.getElementById('totalMintPrice').innerText = `${total} ETH`;
+        }
+
+        function executeMint() {
+            if (!walletConnected) {
+                openWalletModal();
+                showToast('Wallet Required', 'Please connect your Ethereum wallet to complete transaction.');
+                return;
+            }
+
+            totalMinted += currentMintQty;
+            const progress = ((totalMinted / 1000) * 100).toFixed(1);
+            
+            document.getElementById('heroMintCount').innerText = `${totalMinted} / 1,000`;
+            document.getElementById('mintProgressText').innerText = `${progress}% (${totalMinted} / 1,000)`;
+            document.getElementById('mintProgressBar').style.width = `${progress}%`;
+
+            showToast('Mint Successful!', `Minted ${currentMintQty} Nasalis Flow NFT(s). Check your OpenSea inventory.`);
+        }
+
+        function executeMintModal() {
+            closeNftModal();
+            executeMint();
+        }
+
+        // NFT Preview Modal Logic
+        function openNftModal(nft) {
+            const modal = document.getElementById('nftModal');
+            document.getElementById('modalTokenTag').innerText = `Token #${nft.id}`;
+            document.getElementById('modalTitle').innerText = nft.name;
+            document.getElementById('modalDesc').innerText = `Procedural vector flow art with ${nft.density} density strands and ${nft.hue} color gradient.`;
+
+            const traitsBox = document.getElementById('modalTraits');
+            traitsBox.innerHTML = `
+                <div class="p-2 bg-darkBg rounded-lg border border-cream/10">
+                    <span class="text-cream/50 text-[9px] block">Rarity Tier</span>
+                    <span class="text-gold font-bold">${nft.rarity}</span>
+                </div>
+                <div class="p-2 bg-darkBg rounded-lg border border-cream/10">
+                    <span class="text-cream/50 text-[9px] block">Density Vector</span>
+                    <span class="text-cream font-semibold">${nft.density}</span>
+                </div>
+                <div class="p-2 bg-darkBg rounded-lg border border-cream/10">
+                    <span class="text-cream/50 text-[9px] block">Hue Spectrum</span>
+                    <span class="text-cream font-semibold">${nft.hue}</span>
+                </div>
+                <div class="p-2 bg-darkBg rounded-lg border border-cream/10">
+                    <span class="text-cream/50 text-[9px] block">Storage</span>
+                    <span class="text-emeraldFlow font-semibold">100% On-Chain</span>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+
+            // Render Preview Canvas
+            setTimeout(() => {
+                const canvas = document.getElementById('modalCanvas');
+                const modalFlow = new FlowFieldGenerator(canvas);
+                modalFlow.palette = nft.palette;
+                modalFlow.numParticles = 300;
+                modalFlow.resetParticles();
+                for (let i = 0; i < 220; i++) modalFlow.step();
+            }, 50);
+        }
+
+        function closeNftModal() {
+            document.getElementById('nftModal').classList.add('hidden');
+        }
+
+        // Custom Toast Notification System
+        function showToast(title, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastMessage').innerText = message;
+
+            toast.classList.remove('translate-y-32', 'opacity-0');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

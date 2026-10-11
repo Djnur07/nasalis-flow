@@ -10,7 +10,7 @@ import { getRandomPortraits } from "@/lib/artwork";
 import { BRAND, COLLECTION } from "@/lib/master-data";
 
 const DESCRIPTION =
-  "Algorithmic flowing-line portraits of the proboscis monkey (Nasalis larvatus) — each one traced from a unique noise field, no two alike.";
+  "Algorithmic flowing-line portraits of the proboscis monkey (Nasalis larvatus) each one traced from a unique noise field, no two alike.";
 
 export function Hero() {
   const heroImages = getRandomPortraits(10);

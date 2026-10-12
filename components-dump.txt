@@ -1,0 +1,534 @@
+--- components/Hero.tsx ---
+import Image from "next/image";
+import { Button } from "./Button";
+import { GenerativePortrait } from "./GenerativePortrait";
+import { HolderPreview } from "./HolderPreview";
+import { Roadmap, Utility } from "./RoadmapUtility";
+import { getCollectionImages, getHeroImage } from "@/lib/artwork";
+import { BRAND, COLLECTION } from "@/lib/master-data";
+
+const DESCRIPTION =
+  "Algorithmic flowing-line portraits of the proboscis monkey (Nasalis larvatus) — each one traced from a unique noise field, no two alike.";
+
+export function Hero() {
+  const heroImage = getHeroImage() ?? getCollectionImages()[0];
+
+  return (
+    <section id="home" className="relative overflow-hidden bg-noir px-6 pt-28 pb-24 sm:px-10 xl:flex xl:min-h-svh xl:flex-col xl:justify-center xl:pt-[5.5rem] xl:pb-6">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1200 800"
+        preserveAspectRatio="xMidYMid slice"
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.14]"
+      >
+        <path
+          d="M -50 620 C 220 520, 380 700, 600 560 S 980 420, 1250 520"
+          stroke="var(--color-bone)"
+          strokeWidth="1"
+          fill="none"
+        />
+        <path
+          d="M -50 180 C 260 300, 420 90, 640 220 S 1000 340, 1250 200"
+          stroke="var(--color-amber)"
+          strokeWidth="1"
+          fill="none"
+        />
+        <path
+          d="M -50 420 C 300 380, 500 460, 700 400 S 1020 340, 1250 400"
+          stroke="var(--color-turquoise)"
+          strokeWidth="1"
+          fill="none"
+        />
+      </svg>
+
+      <div className="relative mx-auto max-w-[90rem] xl:w-full lg:grid lg:grid-cols-[1fr_auto_auto_1fr]">
+        <div className="text-center lg:col-start-2 lg:row-start-1 lg:text-left">
+          <p className="animate-fade-up text-[11px] uppercase tracking-[0.5em] text-turquoise">
+            Generative Art Collection
+          </p>
+          <h1 className="animate-fade-up mt-5 font-serif text-6xl leading-[0.95] text-bone sm:text-7xl xl:mt-2 xl:text-5xl">
+            {BRAND.name}
+          </h1>
+        </div>
+
+        {/* Composition: the Hero artwork is the background of one large frame,
+            with Roadmap (left) and Utility (right) layered over it, and the
+            Holder Portal beside the frame on the far right at its natural
+            height. From lg up the artwork covers the whole frame; below lg it
+            sits full-width, uncropped, at the top of the frame and fades into
+            the text that stacks over its lower part. */}
+        <div className="animate-fade-up mt-12 grid gap-6 lg:col-span-4 lg:row-start-2 lg:mt-8 xl:mt-5 lg:grid-cols-[minmax(0,1fr)_13rem] lg:items-start xl:grid-cols-[minmax(0,1fr)_18rem]">
+          <div className="relative overflow-clip border border-bone/15 bg-noir-soft">
+            <div className="pointer-events-none absolute inset-x-0 top-0 aspect-square lg:-top-[12%] lg:aspect-auto lg:h-full xl:top-0">
+              {heroImage ? (
+                <Image
+                  src={heroImage}
+                  alt="Featured Nasalis Flow generative portrait"
+                  fill
+                  priority
+                  sizes="(min-width: 1280px) 75vw, (min-width: 1024px) 70vw, 100vw"
+                  className="object-cover xl:object-[50%_72%]"
+                />
+              ) : (
+                <GenerativePortrait seed={5555} noseSize={0.85} decorative className="h-full w-full" />
+              )}
+
+              {/* < lg: fade the artwork's lower part into the stacked text. */}
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_50%,rgb(15_23_19/0.7)_75%,var(--color-noir-soft)_100%)] lg:hidden" />
+              {/* lg+: the artwork is nudged up so the Nasalis clears the dark
+                  headroom sooner, its lower edge fades into the frame, and the
+                  scrim is heavy behind the Roadmap and Utility columns but light
+                  in the middle so the Nasalis stays clearly visible. */}
+              <div className="absolute inset-0 hidden bg-[linear-gradient(180deg,transparent_80%,var(--color-noir-soft)_100%),linear-gradient(90deg,rgb(10_12_10/0.86)_0%,rgb(10_12_10/0.82)_10%,rgb(10_12_10/0.78)_31%,rgb(10_12_10/0.55)_39%,rgb(10_12_10/0.55)_51%,rgb(10_12_10/0.78)_57%,rgb(10_12_10/0.88)_100%)] lg:block xl:hidden" />
+              <div className="absolute inset-0 hidden bg-[linear-gradient(180deg,transparent_80%,var(--color-noir-soft)_100%),linear-gradient(90deg,rgb(10_12_10/0.86)_0%,rgb(10_12_10/0.84)_12%,rgb(10_12_10/0.8)_41%,rgb(10_12_10/0.55)_46%,rgb(10_12_10/0.55)_52%,rgb(10_12_10/0.8)_56%,rgb(10_12_10/0.88)_100%)] xl:block" />
+            </div>
+
+            <div className="relative grid gap-12 px-6 pt-[62%] pb-10 [text-shadow:0_1px_2px_rgb(0_0_0/0.85),0_0_16px_rgb(0_0_0/0.65)] sm:px-8 md:grid-cols-2 md:gap-x-8 lg:grid-cols-[12rem_9rem_15.5rem] lg:justify-center lg:gap-x-4 lg:px-6 lg:pt-8 xl:grid-cols-[minmax(0,0.77fr)_minmax(0,0.23fr)_minmax(0,1fr)] xl:gap-x-4 xl:pt-4 xl:pb-4 xl:pl-[9%] xl:pr-[2%]">
+              <Roadmap />
+              {/* Open middle: the artwork shows through between the columns. */}
+              <div aria-hidden="true" className="hidden lg:block" />
+              <Utility />
+            </div>
+          </div>
+
+          <div className="md:max-w-md md:justify-self-end lg:max-w-none lg:justify-self-stretch">
+            <HolderPreview />
+          </div>
+        </div>
+
+        {/* Stays in this position below lg; from lg up it is placed in the
+            right cell of the top row, level with the title block. */}
+        <div className="mt-16 flex flex-col items-center text-center lg:col-start-3 lg:row-start-1 lg:ml-8 lg:mt-0 xl:ml-16">
+          <p className="animate-fade-up text-xs uppercase tracking-[0.35em] text-turquoise">
+            {COLLECTION.totalSupply.toLocaleString()} Generative Portraits
+          </p>
+
+          <p className="animate-fade-up mt-6 max-w-md text-base leading-relaxed text-bone/75 lg:mt-2 xl:text-sm">
+            {DESCRIPTION}
+          </p>
+        </div>
+
+        <div className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-4 lg:col-span-4 lg:row-start-3 lg:mt-12 xl:mt-5">
+          <Button href="/collection" tone="dark" variant="primary">
+            Explore Collection
+          </Button>
+          <Button href="/live" tone="dark" variant="outline">
+            Live Render
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+--- components/Navbar.tsx ---
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { WalletButton } from "./WalletButton";
+import { XIcon } from "./XIcon";
+import { GitHubIcon } from "./GitHubIcon";
+import { BRAND, SOCIAL } from "@/lib/master-data";
+
+const NAV_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Collection", href: "/collection" },
+  { label: "About", href: "/about" },
+  { label: "Traits", href: "/traits" },
+  { label: "Live", href: "/live" },
+];
+
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <span className="relative block h-4 w-5" aria-hidden="true">
+      <span
+        className={`absolute left-0 top-0 h-px w-5 bg-current transition-transform duration-300 ${
+          open ? "translate-y-2 rotate-45" : ""
+        }`}
+      />
+      <span
+        className={`absolute left-0 top-2 h-px w-5 bg-current transition-opacity duration-300 ${
+          open ? "opacity-0" : "opacity-100"
+        }`}
+      />
+      <span
+        className={`absolute left-0 top-4 h-px w-5 bg-current transition-transform duration-300 ${
+          open ? "-translate-y-2 -rotate-45" : ""
+        }`}
+      />
+    </span>
+  );
+}
+
+export function Navbar() {
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        scrolled || open ? "border-b border-bone/10 bg-noir/85 backdrop-blur-sm" : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5 sm:px-10">
+        <Link href="/" className="shrink-0 whitespace-nowrap font-serif text-lg tracking-wide text-bone">
+          {BRAND.name}
+        </Link>
+
+        <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex xl:gap-8">
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative pb-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
+                  active ? "text-bone" : "text-bone/80 hover:text-bone"
+                }`}
+              >
+                {link.label}
+                {active && <span className="absolute inset-x-0 -bottom-0.5 h-px bg-magenta" aria-hidden="true" />}
+              </Link>
+            );
+          })}
+          <a
+            href={SOCIAL.x}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${BRAND.name} on X`}
+            className="text-bone/80 transition-colors hover:text-bone"
+          >
+            <XIcon className="h-4 w-4" />
+          </a>
+          <a
+            href={SOCIAL.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${BRAND.name} on GitHub`}
+            className="text-bone/80 transition-colors hover:text-bone"
+          >
+            <GitHubIcon className="h-4 w-4" />
+          </a>
+          <WalletButton tone="light" variant="primary" />
+        </nav>
+
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center text-bone lg:hidden"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((value) => !value)}
+        >
+          <MenuIcon open={open} />
+        </button>
+      </div>
+
+      <nav
+        id="mobile-nav"
+        aria-label="Mobile"
+        className={`overflow-hidden border-t border-bone/10 bg-noir transition-[max-height] duration-300 lg:hidden ${
+          open ? "max-h-[34rem]" : "max-h-0 border-t-0"
+        }`}
+      >
+        <div className="flex flex-col gap-1 px-6 py-4">
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                aria-current={active ? "page" : undefined}
+                className={`flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] ${
+                  active ? "text-bone" : "text-bone/85"
+                }`}
+              >
+                {active && <span className="h-1 w-1 rounded-full bg-magenta" aria-hidden="true" />}
+                {link.label}
+              </Link>
+            );
+          })}
+          <a
+            href={SOCIAL.x}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${BRAND.name} on X`}
+            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-bone/85"
+          >
+            <XIcon className="h-4 w-4" />
+            X
+          </a>
+          <a
+            href={SOCIAL.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${BRAND.name} on GitHub`}
+            className="flex items-center gap-2 py-3 text-sm font-medium uppercase tracking-[0.15em] text-bone/85"
+          >
+            <GitHubIcon className="h-4 w-4" />
+            GitHub
+          </a>
+          <WalletButton tone="light" variant="primary" fullWidth className="mt-2" />
+        </div>
+      </nav>
+    </header>
+  );
+}
+
+--- components/GenerativePortrait.tsx ---
+const PALETTE = ["#c9b48a", "#74b8ae", "#4f7080", "#b98f57", "#f7f2e7"];
+
+type GenerativePortraitProps = {
+  /** Deterministic seed so the same id always renders the same placeholder. */
+  seed?: number;
+  label?: string;
+  className?: string;
+  /** 0–1, echoes the collection's nose-size rarity trait in the placeholder art. */
+  noseSize?: number;
+  /** Marks the artwork as purely decorative for assistive tech. */
+  decorative?: boolean;
+};
+
+function mulberry32(seed: number) {
+  let a = seed;
+  return function random() {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * A tasteful, code-generated stand-in for the real artwork: flowing noise-field
+ * lines around a central "nose" motif, sized by `noseSize` to echo the
+ * collection's core rarity trait. Not part of the actual NFT art.
+ */
+export function GenerativePortrait({
+  seed = 1,
+  label = "Generative placeholder portrait",
+  className = "",
+  noseSize,
+  decorative = false,
+}: GenerativePortraitProps) {
+  const random = mulberry32(seed * 9973 + 17);
+  const size = noseSize ?? random();
+
+  const lines = Array.from({ length: 16 }, (_, i) => {
+    const y0 = 30 + random() * 340;
+    const y1 = 30 + random() * 340;
+    const cx1 = 40 + random() * 100;
+    const cx2 = 260 + random() * 100;
+    return {
+      key: i,
+      d: `M -20 ${y0} C ${cx1} ${y0 - 40 + random() * 80}, ${cx2} ${y1 - 40 + random() * 80}, 420 ${y1}`,
+      color: PALETTE[Math.floor(random() * PALETTE.length)],
+      width: 1 + random() * 1.8,
+      opacity: 0.16 + random() * 0.46,
+    };
+  });
+
+  const noseRx = 24 + size * 48;
+  const noseRy = noseRx * 1.15;
+
+  const accessibleProps = decorative
+    ? { "aria-hidden": true as const }
+    : { role: "img" as const, "aria-label": label };
+
+  return (
+    <svg
+      viewBox="0 0 400 400"
+      preserveAspectRatio="xMidYMid slice"
+      className={className}
+      {...accessibleProps}
+    >
+      {!decorative && <title>{label}</title>}
+      <rect width="400" height="400" fill="#211d17" />
+      {lines.map((line) => (
+        <path
+          key={line.key}
+          d={line.d}
+          stroke={line.color}
+          strokeWidth={line.width}
+          strokeLinecap="round"
+          fill="none"
+          opacity={line.opacity}
+        />
+      ))}
+      <ellipse
+        cx="200"
+        cy="220"
+        rx={noseRx}
+        ry={noseRy}
+        fill="#b98f57"
+        opacity="0.14"
+        stroke="#b98f57"
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
+--- components/RoadmapUtility.tsx ---
+import { COLLECTION } from "@/lib/master-data";
+
+type RoadmapItem = { title: string; description: string };
+
+type UtilityItem = { title: string; tagline: string; description: string };
+
+const ROADMAP: RoadmapItem[] = [
+  { title: "Origin", description: "The beginning of Nasalis Flow." },
+  { title: "Generation", description: "Building the generative system." },
+  {
+    title: "Collection",
+    description: `Bringing ${COLLECTION.totalSupply.toLocaleString()} unique Nasalis portraits to life.`,
+  },
+  { title: "Live Render", description: "Making the generative process visible." },
+  { title: "Holder", description: "Giving ownership a purpose." },
+  { title: "Utility", description: "Expanding each Nasalis beyond a static NFT." },
+  { title: "Living Collection", description: "The collection continues to evolve." },
+  { title: "Conservation", description: "Connecting digital ownership with the real world." },
+  { title: "Legacy", description: "A collection with identity, history, and lineage." },
+];
+
+const UTILITY: UtilityItem[] = [
+  {
+    title: "Holder Remix",
+    tagline: "Create from your own identity.",
+    description:
+      "Generate new visual variants from your own Nasalis while preserving its original token identity and hash lineage.",
+  },
+  {
+    title: "Generative Sound",
+    tagline: "See it. Hear it.",
+    description:
+      "The same hash that defines a Nasalis can become the foundation for generative ambient sound.",
+  },
+  {
+    title: "Physical Edition",
+    tagline: "Bring your Nasalis into the physical world.",
+    description:
+      "Transform your Nasalis into high resolution physical editions generated from the original artwork data.",
+  },
+  {
+    title: "Anniversary Variant",
+    tagline: "Your Nasalis evolves with time.",
+    description:
+      "Generate a new unique variant from the original identity of a token on each anniversary.",
+  },
+  {
+    title: "Family Tree",
+    tagline: "Every Nasalis has a lineage.",
+    description:
+      "Explore the relationship between original tokens, remixes, and future variants through a public generative family tree.",
+  },
+  {
+    title: "Bekantan Conservation",
+    tagline: "Digital identity connected to real world conservation.",
+    description:
+      "Explore symbolic adoption and conservation initiatives supporting the protection of the proboscis monkey and its habitat.",
+  },
+];
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** Short, thin flowing-line accent that sits under each column heading. */
+function FlowAccent() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 240 24"
+      className="mt-4 h-5 w-32 text-turquoise xl:mt-2 xl:h-4 xl:w-28"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+    >
+      <path d="M 0 12 C 30 -2, 55 26, 90 12 S 150 -2, 180 12 S 225 22, 240 10" />
+      <path d="M 0 16 C 34 4, 60 28, 96 16 S 156 4, 186 16" opacity="0.5" />
+    </svg>
+  );
+}
+
+const HEADING = "font-serif text-4xl uppercase tracking-[0.08em] text-bone lg:text-3xl xl:text-3xl xl:leading-none";
+const NUMBER = "pt-px font-mono text-xs tracking-[0.12em] text-neutral-200 xl:text-[11px]";
+const TITLE =
+  "text-xs font-semibold uppercase tracking-[0.14em] text-bone xl:leading-[14px] xl:tracking-[0.18em]";
+const BODY = "text-[13px] leading-snug text-neutral-200 xl:text-[12.5px] xl:leading-[1.35]";
+const ITEM =
+  "grid grid-cols-[1.75rem_1fr] gap-x-3 border-t border-bone/20 py-3.5 last:border-b xl:grid-cols-[1.5rem_1fr] xl:gap-x-2 xl:py-2";
+
+/** Roadmap column of the Hero composition (anchor target for the "Roadmap" nav link). */
+export function Roadmap() {
+  return (
+    <section id="roadmap" aria-labelledby="roadmap-heading" className="lg:flex lg:flex-col">
+      <h2 id="roadmap-heading" className={HEADING}>
+        Roadmap
+      </h2>
+      <FlowAccent />
+
+      {/* From lg up the list stretches to the full row height so Roadmap ends
+          level with the taller Utility column. */}
+      <ol className="mt-7 lg:flex lg:flex-1 lg:flex-col xl:mt-3">
+        {ROADMAP.map((item, index) => (
+          <li key={item.title} className={`${ITEM} lg:flex-1`}>
+            <span className={NUMBER}>{pad(index + 1)}</span>
+            <div>
+              <h3 className={TITLE}>{item.title}</h3>
+              <p className={`mt-1 xl:mt-0.5 ${BODY}`}>{item.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+/** Utility column of the Hero composition (anchor target for the "Utility" nav link). */
+export function Utility() {
+  return (
+    <section id="utility" aria-labelledby="utility-heading">
+      <h2 id="utility-heading" className={HEADING}>
+        Utility
+      </h2>
+      <FlowAccent />
+
+      <ol className="mt-7 xl:mt-3">
+        {UTILITY.map((item, index) => (
+          <li key={item.title} className={ITEM}>
+            <span className={NUMBER}>{pad(index + 1)}</span>
+            <div>
+              <h3 className={TITLE}>{item.title}</h3>
+              <p className="mt-1.5 font-serif text-base leading-snug text-bone xl:mt-0.5 xl:text-[15px] xl:leading-tight">
+                {item.tagline}
+              </p>
+              <p className={`mt-1.5 xl:mt-0.5 ${BODY}`}>{item.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}

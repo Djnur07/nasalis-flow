@@ -1,0 +1,190 @@
+=== Collection page source ===
+./app/(site)/collection/page.tsx
+import type { Metadata } from "next";
+import { Collection } from "@/components/Collection";
+
+export const metadata: Metadata = {
+  title: "Collection — Nasalis Flow",
+  description:
+    "Browse the Nasalis Flow gallery — a preview of 5,555 generative portraits of the proboscis monkey (Nasalis larvatus).",
+};
+
+export default function CollectionPage() {
+  return <Collection />;
+}
+=== Image/public assets folder ===
+./public
+total 40
+drwxr-xr-x   8 dinarjayanurahman  staff   256 17 Sep 06:45 .
+drwxr-xr-x  29 dinarjayanurahman  staff   928  4 Oct 13:19 ..
+-rw-r--r--   1 dinarjayanurahman  staff   391 17 Sep 05:01 file.svg
+-rw-r--r--   1 dinarjayanurahman  staff  1035 17 Sep 05:01 globe.svg
+drwxr-xr-x  61 dinarjayanurahman  staff  1952 17 Sep 20:38 images
+-rw-r--r--   1 dinarjayanurahman  staff  1375 17 Sep 05:01 next.svg
+-rw-r--r--   1 dinarjayanurahman  staff   128 17 Sep 05:01 vercel.svg
+-rw-r--r--   1 dinarjayanurahman  staff   385 17 Sep 05:01 window.svg
+       8
+      58
+=== next.config image domains ===
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+  reactCompiler: true,
+};
+
+export default nextConfig;
+=== resolveMetadataUri.ts content ===
+/**
+ * Public IPFS gateways tried in order when resolving `ipfs://` metadata or
+ * image URIs. No API key or account is required for any of these — they're
+ * free, publicly-run gateways onto the IPFS network.
+ *
+ * Pinata is listed first: it's the pinning service backing the Block
+ * Titans collection, so it's the only gateway verified to reliably serve
+ * this collection's CIDs. The others are kept as fallbacks, but as of this
+ * writing ipfs.io rate-limits (HTTP 429), cloudflare-ipfs.com no longer
+ * resolves at all (DNS failure), and nftstorage.link 302-redirects to
+ * ipfs.io, inheriting its rate limit.
+ */
+const IPFS_GATEWAYS = [
+  "https://gateway.pinata.cloud/ipfs/",
+  "https://ipfs.io/ipfs/",
+  "https://nftstorage.link/ipfs/",
+  "https://cloudflare-ipfs.com/ipfs/",
+];
+
+function stripIpfsPrefix(value: string): string {
+  return value.replace(/^ipfs:\/\//i, "").replace(/^ipfs\//i, "");
+}
+
+/**
+ * Every gateway URL worth trying for a given tokenURI/image URI, in
+ * fallback order. Handles `ipfs://`, an `https://.../ipfs/<cid>` URL
+ * (rewritten to the other gateways too), a bare CID/path, `ar://`
+ * (Arweave), `data:` URIs (returned as-is, no network needed), and plain
+ * `http(s)://` URLs that aren't IPFS at all (also returned as-is).
+ */
+export function resolveMetadataUriCandidates(uri: string): string[] {
+  const trimmed = uri.trim();
+  if (trimmed.length === 0) return [];
+
+  if (trimmed.startsWith("data:")) return [trimmed];
+
+  if (trimmed.startsWith("ar://")) {
+    return [`https://arweave.net/${trimmed.slice("ar://".length)}`];
+  }
+
+  if (/^ipfs:\/\//i.test(trimmed)) {
+    const path = stripIpfsPrefix(trimmed);
+    return IPFS_GATEWAYS.map((gateway) => `${gateway}${path}`);
+  }
+
+  const gatewayMatch = trimmed.match(/\/ipfs\/(.+)$/i);
+  if (gatewayMatch) {
+    return IPFS_GATEWAYS.map((gateway) => `${gateway}${gatewayMatch[1]}`);
+  }
+
+  if (/^https?:\/\//i.test(trimmed)) return [trimmed];
+
+  // No recognized scheme — most likely a bare IPFS CID/path.
+  return IPFS_GATEWAYS.map((gateway) => `${gateway}${stripIpfsPrefix(trimmed)}`);
+}
+
+/** First resolved candidate — good enough for a plain <img src>, which handles its own load failures separately. */
+export function resolveMetadataUri(uri: string): string {
+  return resolveMetadataUriCandidates(uri)[0] ?? uri;
+}
+
+/** Fetches and JSON-parses a tokenURI/metadata URI, trying every gateway fallback before giving up. */
+export async function fetchJsonWithGatewayFallback(uri: string): Promise<unknown> {
+  const candidates = resolveMetadataUriCandidates(uri);
+  if (candidates.length === 0) throw new Error("Empty metadata URI");
+
+  let lastError: unknown;
+  for (const candidate of candidates) {
+    try {
+      const response = await fetch(candidate);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Failed to fetch metadata");
+}
+=== useBlockTitansMetadata.ts content ===
+"use client";
+
+import { useQueries } from "@tanstack/react-query";
+import { fetchJsonWithGatewayFallback } from "./resolveMetadataUri";
+import type { ResolvedTokenUri } from "./useHolderPortalTest";
+
+export interface NftAttribute {
+  trait_type?: string;
+  value?: string | number | boolean;
+}
+
+export interface NftMetadata {
+  name?: string;
+  description?: string;
+  image?: string;
+  attributes?: NftAttribute[];
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/** Best-effort normalization — anything that isn't shaped like NFT metadata is treated as malformed. */
+function toNftMetadata(value: unknown): NftMetadata {
+  if (!isPlainObject(value)) throw new Error("Malformed metadata: expected a JSON object");
+
+  const attributesRaw = value.attributes;
+  const attributes = Array.isArray(attributesRaw)
+    ? attributesRaw
+        .filter(isPlainObject)
+        .map((entry) => ({
+          trait_type: typeof entry.trait_type === "string" ? entry.trait_type : undefined,
+          value:
+            typeof entry.value === "string" || typeof entry.value === "number" || typeof entry.value === "boolean"
+              ? entry.value
+              : undefined,
+        }))
+    : undefined;
+
+  return {
+    name: typeof value.name === "string" ? value.name : undefined,
+    description: typeof value.description === "string" ? value.description : undefined,
+    image: typeof value.image === "string" ? value.image : undefined,
+    attributes,
+  };
+}
+
+/**
+ * Fetches and normalizes off-chain NFT metadata for a batch of resolved
+ * tokenURIs, one independent query per token so a single unavailable or
+ * malformed metadata document doesn't block the others.
+ */
+export function useBlockTitansMetadata(tokenUris: ResolvedTokenUri[]) {
+  const results = useQueries({
+    queries: tokenUris.map(({ tokenId, uri, uriError }) => ({
+      queryKey: ["block-titans-test-metadata", tokenId, uri],
+      queryFn: async () => toNftMetadata(await fetchJsonWithGatewayFallback(uri as string)),
+      enabled: Boolean(uri) && !uriError,
+      staleTime: 5 * 60 * 1000,
+      retry: 1,
+    })),
+  });
+
+  return tokenUris.map(({ tokenId, uri, uriError }, index) => {
+    const result = results[index];
+    return {
+      tokenId,
+      metadata: result?.data,
+      isLoading: Boolean(uri) && !uriError && (result?.isLoading ?? false),
+      error: uriError ? new Error("tokenURI could not be read from the contract") : result?.error ?? undefined,
+    };
+  });
+}
+=== any data/json collection list ===

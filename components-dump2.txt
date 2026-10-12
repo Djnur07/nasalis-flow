@@ -1,0 +1,373 @@
+--- components/Button.tsx ---
+import Link from "next/link";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
+
+type Tone = "light" | "dark";
+type Variant = "primary" | "outline";
+
+type CommonProps = {
+  variant?: Variant;
+  tone?: Tone;
+  className?: string;
+};
+
+type LinkProps = CommonProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & { href: string };
+
+type ButtonProps = CommonProps &
+  ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
+
+const base =
+  "inline-flex items-center justify-center gap-2 px-7 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-colors duration-300 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-turquoise";
+
+const styles: Record<Tone, Record<Variant, string>> = {
+  light: {
+    primary: "bg-bone text-noir hover:bg-amber",
+    outline: "border border-bone/25 text-bone hover:border-bone",
+  },
+  dark: {
+    primary: "bg-bone text-noir hover:bg-amber",
+    outline: "border border-bone/30 text-bone hover:border-bone",
+  },
+};
+
+export function Button({ variant = "primary", tone = "light", className = "", ...props }: LinkProps | ButtonProps) {
+  const classes = `${base} ${styles[tone][variant]} ${className}`;
+
+  if (props.href) {
+    const { href, children, ...rest } = props as LinkProps;
+    return (
+      <Link href={href} className={classes} {...rest}>
+        {children}
+      </Link>
+    );
+  }
+
+  const { children, type = "button", ...rest } = props as ButtonProps;
+  return (
+    <button type={type} className={classes} {...rest}>
+      {children}
+    </button>
+  );
+}
+
+--- components/WalletButton.tsx ---
+"use client";
+
+import { useState } from "react";
+import { useConnect } from "wagmi";
+
+import { useWallet } from "@/lib/web3/useWallet";
+import { Button } from "./Button";
+
+type WalletButtonProps = {
+  tone?: "light" | "dark";
+  variant?: "primary" | "outline";
+  className?: string;
+  fullWidth?: boolean;
+};
+
+export function WalletButton({
+  tone = "light",
+  variant = "primary",
+  className = "",
+  fullWidth = false,
+}: WalletButtonProps) {
+  const {
+    isConnected,
+    isConnecting,
+    shortAddress,
+    disconnect,
+    errorMessage,
+  } = useWallet();
+
+  const { connectors, connect, isPending } = useConnect();
+  const [isOpen, setIsOpen] = useState(false);
+
+  if (isConnected) {
+    return (
+      <div className={`inline-flex items-center gap-3 ${fullWidth ? "w-full" : ""}`}>
+        <span
+          title="Connected wallet address"
+          className={`px-5 py-3 text-xs font-medium tracking-[0.15em] ${
+            tone === "dark" ? "bg-bone/10 text-bone" : "bg-bone/5 text-bone"
+          } ${fullWidth ? "flex-1 text-center" : ""}`}
+        >
+          {shortAddress}
+        </span>
+
+        <button
+          type="button"
+          onClick={() => disconnect()}
+          aria-label="Disconnect wallet"
+          className={`text-xs uppercase tracking-[0.15em] underline-offset-4 hover:underline ${
+            tone === "dark"
+              ? "text-bone/75 hover:text-bone"
+              : "text-bone/65 hover:text-bone"
+          }`}
+        >
+          Disconnect
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className={`inline-flex flex-col items-start ${fullWidth ? "w-full" : ""}`}>
+        <Button
+          type="button"
+          tone={tone}
+          variant={variant}
+          className={`${fullWidth ? "w-full" : ""} ${className}`}
+          onClick={() => setIsOpen(true)}
+          disabled={isConnecting}
+          aria-busy={isConnecting}
+        >
+          {isConnecting ? "Connecting…" : "Connect Wallet"}
+        </Button>
+
+        {errorMessage && (
+          <p
+            role="alert"
+            className={`mt-2 text-xs ${
+              tone === "dark" ? "text-bone/80" : "text-bone/70"
+            }`}
+          >
+            {errorMessage}
+          </p>
+        )}
+      </div>
+
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Choose wallet"
+          onClick={() => setIsOpen(false)}
+        >
+          <div
+            className="w-full max-w-sm border border-bone/15 bg-[#11110f] p-6 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-bone/50">
+                  Wallet
+                </p>
+                <h2 className="mt-2 text-xl text-bone">
+                  Choose your wallet
+                </h2>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="text-bone/50 hover:text-bone"
+                aria-label="Close wallet selection"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              {connectors.filter((connector) => connector.id !== "injected").map((connector) => (
+                <button
+                  key={connector.uid}
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    connect({ connector });
+                    setIsOpen(false);
+                  }}
+                  className="flex w-full items-center justify-between border border-bone/10 px-4 py-4 text-left text-sm text-bone transition hover:border-bone/30 hover:bg-bone/5 disabled:opacity-50"
+                >
+                  <span>{connector.name}</span>
+                  <span className="text-xs text-bone/40">
+                    Connect
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {connectors.length === 0 && (
+              <p className="text-sm leading-6 text-bone/60">
+                No compatible wallet was detected in this browser.
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="mt-5 w-full py-3 text-xs uppercase tracking-[0.15em] text-bone/50 hover:text-bone"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+--- components/Footer.tsx ---
+import Link from "next/link";
+import { XIcon } from "./XIcon";
+import { BRAND, COLLECTION, MARKETPLACE, SOCIAL } from "@/lib/master-data";
+
+const EXPLORE_LINKS = [
+  { label: "Collection", href: "/collection" },
+  { label: "About", href: "/about" },
+  { label: "Traits", href: "/traits" },
+  { label: "Live", href: "/live" },
+];
+
+const SOCIAL_LINKS = [
+  { label: "OpenSea", href: MARKETPLACE.openSea || "#" },
+];
+
+export function Footer() {
+  return (
+    <footer className="border-t border-bone/10 bg-noir-soft text-bone">
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-16 sm:px-10 md:flex-row md:items-start md:justify-between">
+        <div>
+          <p className="font-serif text-2xl text-bone">{BRAND.name}</p>
+          <p className="mt-2 text-xs uppercase tracking-[0.2em] text-bone/60">
+            {COLLECTION.totalSupply.toLocaleString()} Generative Portraits
+          </p>
+        </div>
+
+        <nav aria-label="Footer" className="flex flex-wrap gap-x-12 gap-y-8 text-sm">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-bone/50">Explore</p>
+            <ul className="mt-3 space-y-3">
+              {EXPLORE_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link className="text-bone/78 transition-colors hover:text-bone" href={link.href}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-bone/50">Social</p>
+            <ul className="mt-3 space-y-3">
+              <li>
+                <a
+                  className="inline-flex items-center gap-2 text-bone/78 transition-colors hover:text-bone"
+                  href={SOCIAL.x}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${BRAND.name} on X`}
+                >
+                  <XIcon className="h-3.5 w-3.5" />
+                  X
+                </a>
+              </li>
+              {SOCIAL_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a
+                    className="text-bone/78 transition-colors hover:text-bone"
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div className="border-t border-bone/10 px-6 py-6 text-center text-xs text-bone/50 sm:px-10">
+        {`© ${new Date().getFullYear()} ${BRAND.name}. All rights reserved.`}
+      </div>
+    </footer>
+  );
+}
+
+--- components/HolderPreview.tsx ---
+"use client";
+
+import { useWallet } from "@/lib/web3/useWallet";
+import { Button } from "./Button";
+
+function WalletIcon() {
+  return (
+    <svg
+      viewBox="0 0 40 40"
+      className="h-9 w-9 text-bone/55"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      aria-hidden="true"
+    >
+      <rect x="4" y="10" width="32" height="22" rx="3" />
+      <path d="M4 16h32" />
+      <circle cx="27" cy="23" r="2.2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+// A compact gallery-style information panel — designed to sit beside the
+// featured artwork in the Hero, not as a standalone dashboard section.
+export function HolderPreview() {
+  const { isConnected, isConnecting, address, shortAddress, chainLabel, connect, disconnect, errorMessage } =
+    useWallet();
+
+  return (
+    <div className="flex h-full flex-col justify-center gap-8 border border-bone/15 bg-noir-soft px-8 py-12 sm:px-10 lg:px-6 xl:px-8">
+      <div>
+        <p className="text-xs uppercase tracking-[0.3em] text-turquoise">Holder Portal</p>
+        <h2 className="mt-3 font-serif text-3xl text-bone">Your Nasalis</h2>
+      </div>
+
+      <WalletIcon />
+
+      {isConnected ? (
+        <div className="flex flex-col items-start gap-3">
+          <p className="font-mono text-sm text-bone/90" title={address}>
+            {shortAddress}
+          </p>
+          {chainLabel && <p className="text-xs uppercase tracking-[0.2em] text-bone/55">{chainLabel}</p>}
+          <p className="text-sm leading-relaxed text-bone/78">
+            Wallet connected. NFT ownership verification will be available once the Nasalis Flow
+            contract is deployed.
+          </p>
+          <button
+            type="button"
+            onClick={() => disconnect()}
+            className="text-xs uppercase tracking-[0.2em] text-bone/70 underline-offset-4 transition-colors hover:text-bone hover:underline"
+          >
+            Disconnect Wallet
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col items-start gap-4">
+          <p className="text-sm leading-relaxed text-bone/78">
+            Connect your wallet to see the Nasalis Flow NFTs you own.
+          </p>
+          <Button
+            type="button"
+            tone="dark"
+            variant="primary"
+            onClick={connect}
+            disabled={isConnecting}
+            aria-busy={isConnecting}
+          >
+            {isConnecting ? "Connecting…" : "Connect Wallet"}
+          </Button>
+          {errorMessage && (
+            <p role="alert" className="text-xs text-bone/70">
+              {errorMessage}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

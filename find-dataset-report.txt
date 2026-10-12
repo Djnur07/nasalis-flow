@@ -1,0 +1,78 @@
+=== Folder kandidat (nama mengandung output/images/nasalis/metadata) ===
+/Users/dinarjayanurahman/Pictures/monoline-ink/metadata-json
+/Users/dinarjayanurahman/.claude/plugins/marketplaces/claude-plugins-official/plugins/learning-output-style
+/Users/dinarjayanurahman/.claude/plugins/marketplaces/claude-plugins-official/plugins/explanatory-output-style
+/Users/dinarjayanurahman/.claude/projects/-Users-dinarjayanurahman-nasalis-flow
+/Users/dinarjayanurahman/.claude/projects/-Users-dinarjayanurahman-nasalis-flow-game
+/Users/dinarjayanurahman/nasalis-flow-game
+/Users/dinarjayanurahman/Desktop/nasalis-test
+/Users/dinarjayanurahman/Desktop/nasalis-test/metadata
+/Users/dinarjayanurahman/Desktop/nasalis-flow-engine
+/Users/dinarjayanurahman/Desktop/nasalis-flow-engine/output
+/Users/dinarjayanurahman/Desktop/nasalis-flow-engine/output/metadata
+/Users/dinarjayanurahman/Documents/Muse/animasi/contoh-kecil/metadata
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Mochi Friend NFT/metadata-backup-id
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Mochi Friend NFT/metadata
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Hush/metadata
+/Users/dinarjayanurahman/Documents/PROJECT NFT/monoline-ink/metadata-json
+/Users/dinarjayanurahman/Documents/PROJECT NFT/RAREWILD PROJECT/nasalis-flow-game-level2-styleseet
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/Nasalis-Flow_part01_1-120
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/Nasalis-Flow_part01_1-120/metadata
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/GITHUB/nasalis-flow-repo
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/Nasalis-Flow_part10_1081-1200
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/Nasalis-Flow_part10_1081-1200/metadata
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/METADATA
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/METADATA/metadata pertoken
+/Users/dinarjayanurahman/nasalis-flow
+/Users/dinarjayanurahman/nasalis-flow/nasalis_resend_parts
+/Users/dinarjayanurahman/Downloads/pinata-sample-3/metadata
+/Users/dinarjayanurahman/Downloads/files/bekantan-part01_3334-3653/metadata
+/Users/dinarjayanurahman/Downloads/files/metadata
+/Users/dinarjayanurahman/Downloads/DATA GAME NASALIS
+/Users/dinarjayanurahman/Downloads/DATA GAME NASALIS/nasalis-flow-game-seeds
+/Users/dinarjayanurahman/Downloads/DATA GAME NASALIS/nasalis-flow-game-character-animations
+/Users/dinarjayanurahman/Downloads/DATA GAME NASALIS/nasalis-flow-game-environment
+
+=== Cek jumlah file .png di tiap folder kandidat tadi (manual lanjutan) ===
+Jalankan: find "PATH_FOLDER" -iname '*.png' | wc -l   untuk tiap folder yang muncul di atas
+
+=== Cek file CSV besar di seluruh home folder ===
+/Users/dinarjayanurahman/Pictures/monoline-ink/metadata.csv
+/Users/dinarjayanurahman/Documents/RAREWILD.csv
+/Users/dinarjayanurahman/Documents/Muse/metadata-animasi.csv
+/Users/dinarjayanurahman/Documents/metadata-RAREWILD.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Mochi Friend NFT/_ext-upload/opensea-rows-ext.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Mochi Friend NFT/_ext-upload/metadata-rows-ext.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Mochi Friend NFT/opensea-metadata.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Mochi Friend NFT/metadata.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Hush/opensea-metadata.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/Hush/metadata.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/monoline-ink/metadata.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/RAREWILD PROJECT/allo_free_rarewild_dedup.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/RAREWILD PROJECT/allowlist_dedup.csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/RAREWILD PROJECT/metadata-RAREWILD (2).csv
+/Users/dinarjayanurahman/Documents/PROJECT NFT/DATA NFT/METADATA/metadata-OS UPLOAD.csv
+/Users/dinarjayanurahman/Documents/allo free rarewild .csv
+/Users/dinarjayanurahman/Documents/Muse NFT/MUSE NFT - Trait & Rarity.csv
+/Users/dinarjayanurahman/Documents/Muse NFT/MUSE NFT - Legendary.csv
+/Users/dinarjayanurahman/Downloads/cash.csv
+/Users/dinarjayanurahman/Downloads/example-allowlist.csv
+/Users/dinarjayanurahman/Downloads/1790745342722.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0xc6f9bf34dbf547856bf757c3F05a8A2bd6c8d425.csv
+/Users/dinarjayanurahman/Downloads/MUSE NFT - Trait  Rarity.csv
+/Users/dinarjayanurahman/Downloads/sayc_top_active_30_2026-05-13_10-46.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0x74aa7487ADCA84a51ECc9CB53B7E2E968168c8d5.csv
+/Users/dinarjayanurahman/Downloads/sayc_top_active_50_2026-05-13_10-46.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0x08efcCfD9fFF0A71432C012bc98781fAB96Cd710.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0xd078008c3D887A52CE722A3cA0539cA1F4971dD1.csv
+/Users/dinarjayanurahman/Downloads/example-drop 2/metadata-file.csv
+/Users/dinarjayanurahman/Downloads/raffle-amigos-x-baoliart-10-spot-2-gtd-and-8-fcfs-9d23df-winners-2026-05-25.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0x43c2cd04B757920Dfe175a513e017499862bCA25.csv
+/Users/dinarjayanurahman/Downloads/allowlist.csv
+/Users/dinarjayanurahman/Downloads/export-0xe9f2610b0bb1233f927bd5e859b211998145a148.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0x5942f3bbA2eFaEda47c1eF88505E526B9C8f80f5.csv
+/Users/dinarjayanurahman/Downloads/list.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0xa793665c88c06B04b3cbFC16b6525ACAC761F938.csv
+/Users/dinarjayanurahman/Downloads/robinhood_chain_token_holders_0xFD4908b64B81f176e99a4f07D413A03D92b5b007.csv
+/Users/dinarjayanurahman/Downloads/invalid-addresses.csv
+/Users/dinarjayanurahman/Downloads/MUSE NFT - Legendary.csv

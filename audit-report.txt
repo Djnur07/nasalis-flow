@@ -1,0 +1,101 @@
+=== git status ===
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	audit-report.txt
+	audit.sh
+	nasalis_resend_parts/
+
+nothing added to commit but untracked files present (use "git add" to track)
+=== branches ===
+* main
+  redesign/nasalis-flow-gallery
+  remotes/origin/main
+  remotes/origin/redesign/nasalis-flow-gallery
+=== last commits ===
+eb0c3fb Remove Roadmap and Utility from navbar
+6faefe9 Update Hero layout and add holder portal
+cea8297 Add open-source GitHub links
+8635193 Add wallet selection modal
+717ab08 Merge pull request #1 from Djnur07/redesign/nasalis-flow-gallery
+8a0267d Redesign Nasalis Flow into a dark, multi-page generative-art gallery
+bb26d30 Add Live Render CTA to hero
+6043b85 Integrate live render preview
+f4e9ecd Add 50 Nasalis collection previews
+9922a01 Connect website components to master data
+=== dependencies ===
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "@tanstack/react-query": "^5.103.1",
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "viem": "^2.56.6",
+    "wagmi": "^3.7.7"
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint-config-next": "16.3.5",
+    "typescript": "^5"
+=== artwork files referenced ===
+       3
+=== metadata/csv files ===
+./lib/web3/resolveMetadataUri.ts
+./lib/web3/useBlockTitansMetadata.ts
+=== env keys only ===
+NEXT_PUBLIC_ROBINHOOD_RPC_URL
+=== build ===
+
+up to date, audited 382 packages in 5s
+
+163 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (5 high, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> nasalis-flow@0.1.0 lint
+> eslint
+
+
+> nasalis-flow@0.1.0 build
+> next build
+
+▲ Next.js 16.3.5 (Turbopack)
+- Environments: .env.local
+⚠ Warning: Next.js ignored package-lock.json in /Users/dinarjayanurahman because it is outside the current Git repository (/Users/dinarjayanurahman/nasalis-flow).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+✓ Running next.config.ts took 774ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1448ms
+  Running TypeScript ...
+  Finished TypeScript in 2.1s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/9) ...
+  Generating static pages using 7 workers (2/9) 
+  Generating static pages using 7 workers (4/9) 
+  Generating static pages using 7 workers (6/9) 
+✓ Generating static pages using 7 workers (9/9) in 220ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /collection
+├ ○ /holder-portal-test
+├ ○ /live
+└ ○ /traits
+
+
+○  (Static)  prerendered as static content
+

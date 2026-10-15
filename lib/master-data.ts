@@ -58,7 +58,7 @@ export const COLLECTION: Collection = {
 };
 
 export const WEBSITE: Website = {
-  productionUrl: "https://nasalis-flow.vercel.app/",
+  productionUrl: "https://nasalisflow.xyz/",
 };
 
 export const SOCIAL: Social = {

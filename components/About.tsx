@@ -4,7 +4,7 @@ import { GenerativePortrait } from "./GenerativePortrait";
 import { getRandomPortraits } from "@/lib/artwork";
 import { BRAND, COLLECTION, SOCIAL } from "@/lib/master-data";
 
-const LEDE = `${COLLECTION.name} is a collection of ${COLLECTION.totalSupply.toLocaleString()} generative portraits of the proboscis monkey (Nasalis larvatus), a primate endemic to Borneo whose survival is increasingly threatened by the loss of mangrove forest.`;
+const LEDE = `${COLLECTION.name} is a collection of ${COLLECTION.totalSupply.toLocaleString()} generative portraits of the proboscis monkey (Nasalis larvatus), a primate endemic to Asia whose survival is increasingly threatened by the loss of mangrove forest.`;
 
 const PARAGRAPHS = [
   "Each piece is built not from flat color fields but from thousands of flowing lines that follow a noise field while tracing the contours of its form.",

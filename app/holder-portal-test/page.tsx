@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { HolderPortalTest } from "@/components/HolderPortalTest";
 
 // Standalone test route for validating Holder Portal ownership detection
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function HolderPortalTestPage() {
+  // Internal test harness: available in local development only, never on the live site.
+  if (process.env.NODE_ENV === "production") notFound();
   return (
     <main className="min-h-screen">
       <div className="mx-auto max-w-6xl px-6 py-20 sm:px-10">
